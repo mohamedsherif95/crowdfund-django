@@ -1,17 +1,16 @@
-from django.http.response import HttpResponse
-from django.views import View
-from django.shortcuts import render, redirect
-from .forms import UserForm
 from django.urls import reverse
-from django.core.mail import send_mail
-from django.utils.encoding import force_bytes, force_text, DjangoUnicodeDecodeError
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.contrib.sites.shortcuts import get_current_site
-from .models import User
 from .utils import token_generator
-from django.contrib import messages
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_text, DjangoUnicodeDecodeError
+from django.contrib import messages, auth
 from django.contrib.auth.views import LoginView
-
+from django.contrib.sites.shortcuts import get_current_site
+from django.http.response import HttpResponse
+from django.shortcuts import render, redirect
+from django.core.mail import send_mail
+from .models import User
+from .forms import UserForm
+from django.views import View
 
 def index(request):
     return HttpResponse("<h1>Landing Page</h1>")
@@ -92,9 +91,47 @@ class VerificationView(View):
         except Exception as ex:
             pass
 
-        return redirect('login')
+        return redirect('accounts:login')
 
 
 class UserLoginView(LoginView):
-    template_name = 'accounts/login.html'
+
+    def get(self, request):
+        return render(request, 'accounts/login.html')
+
+    def post(self, request):
+        username = request.POST['username']
+        password = request.POST['password']
+
+        if username and password:
+            user = auth.authenticate(username=username, password=password)
+
+            if not user:
+                messages.error(request, 'Invalid credentials or email not verified yet')
+                return render(request, 'accounts/login.html')
+            else:
+                if user.is_active:
+                    auth.login(request, user)
+                    messages.success(request, 'Welcome, ' +
+                                     user.username+' you are now logged in')
+                    return redirect('accounts:landing')
+                else:
+                    messages.error(request, 'Account is not active,please check your email')
+                    return render(request, 'accounts/login.html')
+
+        else:
+            messages.error(request, 'Please fill all fields')
+            return render(request, 'accounts/login.html')
+
+
+class UserLogoutView(View):
+    def get(self, request):
+        auth.logout(request)
+        print("logged out")
+        return redirect('accounts:login')
+
+    def post(self, request):
+        auth.logout(request)
+        print("logged out")
+        return redirect('accounts:login')
     
