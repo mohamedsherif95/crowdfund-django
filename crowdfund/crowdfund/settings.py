@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'accounts',
     'phonenumber_field',
     'widget_tweaks',
+    'projects',
 ]
 
 MIDDLEWARE = [
