@@ -1,19 +1,19 @@
 from django.urls import reverse
 from .utils import token_generator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.utils.encoding import force_bytes, force_text, DjangoUnicodeDecodeError
-from django.contrib import messages, auth
+from django.utils.encoding import force_bytes, force_text
+from django.contrib import auth
 from django.contrib.auth.views import LoginView
 from django.contrib.sites.shortcuts import get_current_site
-from django.http.response import HttpResponse
 from django.shortcuts import render, redirect
 from django.core.mail import send_mail
 from .models import User
-from .forms import UserForm
+from .forms import UserForm, LoginForm
 from django.views import View
 
-def index(request):
-    return HttpResponse("<h1>Landing Page</h1>")
+
+def landing(request):
+    return redirect('accounts:login')
 
 
 class RegisterationView(View):
@@ -51,28 +51,6 @@ class RegisterationView(View):
                 return render(request, 'accounts/register.html', {'form': form})
 
 
-def createUser(request):
-    if request.method == 'POST':
-        form = UserForm(request.POST)
-        if form.is_valid():
-            user = form.save(commit=False)
-            user.is_active = False
-            user.save()
-            email_body = ''
-            send_mail(
-                'Account Activation Email',
-                email_body,
-                'noreply@semicolon.com',
-                [user.email],
-                fail_silently=False,
-            )
-        else:
-            return render(request, 'accounts/register.html', {'form': form})
-
-    form = UserForm()
-    return render(request, 'accounts/register.html', {'form': form})
-
-
 class VerificationView(View):
     def get(self, request, uidb64, token):
         try:
@@ -95,43 +73,12 @@ class VerificationView(View):
 
 
 class UserLoginView(LoginView):
-
-    def get(self, request):
-        return render(request, 'accounts/login.html')
-
-    def post(self, request):
-        username = request.POST['username']
-        password = request.POST['password']
-
-        if username and password:
-            user = auth.authenticate(username=username, password=password)
-
-            if not user:
-                messages.error(request, 'Invalid credentials or email not verified yet')
-                return render(request, 'accounts/login.html')
-            else:
-                if user.is_active:
-                    auth.login(request, user)
-                    messages.success(request, 'Welcome, ' +
-                                     user.username+' you are now logged in')
-                    return redirect('accounts:landing')
-                else:
-                    messages.error(request, 'Account is not active,please check your email')
-                    return render(request, 'accounts/login.html')
-
-        else:
-            messages.error(request, 'Please fill all fields')
-            return render(request, 'accounts/login.html')
+    template_name = 'accounts/login.html'
+    redirect_authenticated_user = True
+    form_class = LoginForm
 
 
 class UserLogoutView(View):
     def get(self, request):
         auth.logout(request)
-        print("logged out")
         return redirect('accounts:login')
-
-    def post(self, request):
-        auth.logout(request)
-        print("logged out")
-        return redirect('accounts:login')
-    
