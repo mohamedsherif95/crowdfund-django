@@ -1,25 +1,4 @@
 {% extends 'base.html' %}
-{% load static %}
-{% comment %} {% extends 'base.html' %}
-
-<!-- page title -->
-{% block title %} Login {% endblock %}
-
-<!-- page content -->
-{% block content %}
-<div class="container m-2">
-  <form method="POST">
-    {% csrf_token %}
-
-    <!-- form variable -->
-    {% include 'includes/form.html' %}
-
-    <input type="submit" name="sumbit" value="Login" />
-  </form>
-</div>
-{% endblock %} {% endcomment %}
-
-
 
 {% block content %}
 
@@ -34,7 +13,8 @@
             <form action="{% url 'accounts:login' %}" method="post" novalidate>
               {% csrf_token %}
               {% include 'includes/form.html' %}
-              <input type="submit" value="Login">
+              <input class="m-2" type="submit" value="Login">
+              <a href="{% url 'accounts:password_reset' %}">forgot password?</a>
             </form>
           </div>
         </div>

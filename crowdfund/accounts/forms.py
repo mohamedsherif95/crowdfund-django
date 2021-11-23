@@ -22,7 +22,7 @@ class LoginForm(AuthenticationForm):
 
     error_messages = {
         'invalid_login': _("Please enter a correct %(username)s and password"),
-        'inactive': _("Please activate thee account to sign in"),}
+        'inactive': _("Please activate the account to sign in"),}
 
     def clean(self):
         username = self.cleaned_data.get('username')
