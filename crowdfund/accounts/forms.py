@@ -9,9 +9,11 @@ from django.utils.translation import gettext_lazy as _
 
 class UserForm(UserCreationForm):
 
+    first_name = forms.CharField(required=True)
+    last_name = forms.CharField(required=True)
+    profile_picture = forms.ImageField(required=False)
     phone_number = PhoneNumberField(
-    widget=PhoneNumberPrefixWidget(initial='EG')
-    )
+    widget=PhoneNumberPrefixWidget(initial='EG'), required=False)
 
     class Meta:
         model = User

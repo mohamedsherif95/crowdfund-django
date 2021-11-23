@@ -5,20 +5,44 @@
 
 <!-- page content -->
 {% block content %}
-<div class="container m-2">
-  <form
-    class="form"
-    action="{% url 'accounts:register' %}"
-    method="post"
-    enctype="multipart/form-data"
-    novalidate
-  >
-    {% csrf_token %}
+<div class="d-flex justify-content-center">
+  <div class="card my-5 col-5 shadow">
+    <div class="card-body">
+      <div class="card-title py-3">
+        <h1>Sign Up</h1>
+      </div>
+      <div>
+        <form
+          class="form"
+          action="{% url 'accounts:register' %}"
+          method="post"
+          enctype="multipart/form-data"
+          novalidate
+        >
+          {% csrf_token %}
 
-    <!-- form variable -->
-    {% include 'includes/form.html' %}
-
-    <input type="submit" name="sumbit" value="Register" />
-  </form>
+          <!-- form variable -->
+          {% include 'includes/form.html' %}
+          <p class="text-muted small">
+            - fields with * are required <br />
+            - By clicking Sign Up, you agree to our Terms, Data Policy and
+            Cookie Policy. You may receive SMS notifications from us and can opt
+            out at any time.
+          </p>
+          <div class="col-12 text-center">
+            <input
+              type="submit"
+              name="sumbit"
+              class="my-2 btn btn-success col-4 p-2"
+              value="Sign Up"
+            />
+            <div class="text-center">
+              <a href="{% url 'accounts:login' %}">Already have an account?</a>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}

@@ -42,8 +42,10 @@ INSTALLED_APPS = [
     'rest_framework',
     'accounts',
     'phonenumber_field',
+    'django_countries',
     'widget_tweaks',
     'projects',
+
 ]
 
 MIDDLEWARE = [
