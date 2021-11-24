@@ -17,7 +17,7 @@ class User(AbstractUser):
     facebook = models.URLField(max_length=200, null=True, blank=True)
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username', 'profile_picture']
+    REQUIRED_FIELDS = ['username']
 
     def __str__(self):
         return self.email
