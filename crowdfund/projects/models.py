@@ -17,19 +17,25 @@ class Project(models.Model):
         choices=CATEGORY_CHOICES,
         default='SC',
     )
-    images = models.ImageField(null=False,blank=False)
+    images = models.ImageField(null=False, blank=False)
     total_target = models.IntegerField()
     tags = TaggableManager()
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
     
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     def __str__(self):
         return self.title
 
-class Deonate(models.Model):
+
+# class Images(models.Model):
+#     post = models.ForeignKey(Project, default=None, on_delete=models.CASCADE, blank=True, null=True)
+#     image = models.ImageField(upload_to='images/', blank=True, null=True)
+
+
+# class Deonate(models.Model):
     
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    user_project = models.ForeignKey(Project, on_delete=models.CASCADE)
+#     user = models.ForeignKey(User, on_delete=models.CASCADE)
+#     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     
     

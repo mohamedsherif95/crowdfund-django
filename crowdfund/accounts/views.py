@@ -29,7 +29,7 @@ class RegisterationView(View):
 
     def post(self, request):
         if request.method == 'POST':
-            form = UserForm(request.POST)
+            form = UserForm(request.POST, request.FILES)
             if form.is_valid():
                 user = form.save(commit=False)
                 user.is_active = False
