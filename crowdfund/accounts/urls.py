@@ -15,5 +15,6 @@ urlpatterns = [
     path('not-verified/', TemplateView.as_view(template_name='accounts/not_verified.html'), name='not_verified'),
     path('password_reset/', views.password_reset_request, name='password_reset'),
     path('profile/<int:pk>/', views.ProfileView.as_view(), name='profile'),
+    path('profile/<int:pk>/update', views.ProfileUpdate.as_view(), name='profile_update'),
 ]
 

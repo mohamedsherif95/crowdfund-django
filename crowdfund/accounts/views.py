@@ -15,7 +15,7 @@ from django.core.mail import send_mail, BadHeaderError
 from .models import User
 from .forms import UserForm, LoginForm
 from django.views import View
-from django.views.generic import DetailView
+from django.views.generic import DetailView, UpdateView
 
 
 def landing(request):
@@ -93,6 +93,15 @@ class UserLogoutView(View):
 class ProfileView(DetailView):
     model = User
     template_name = 'accounts/user_profile.html'
+
+
+class ProfileUpdate(UpdateView):
+    model = User
+    template_name = 'accounts/profile_update.html'
+    fields = ('first_name', 'last_name', 'username', 'phone_number', 'profile_picture', 'birth_date', 'country', 'facebook')
+    pk_url_kwarg = 'pk'
+
+
 
 def password_reset_request(request):
     if request.method == "POST":
