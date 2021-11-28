@@ -75,7 +75,7 @@
         <div class="row d-flex justify-content-center">
           {% for project in user.project_set.all %}
           <div class="card col-4 mx-3 p-2 shadow">
-            <a href="{% url 'projects:project_details' project.pk %}">
+            <a id="project-title" href="{% url 'projects:project_details' project.pk %}">
               <img
                 src="{{ project.images.url }}"
                 class="card-img-top"
