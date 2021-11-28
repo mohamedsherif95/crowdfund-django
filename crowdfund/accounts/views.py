@@ -1,4 +1,4 @@
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from .utils import token_generator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_text
@@ -99,7 +99,9 @@ class ProfileUpdate(UpdateView):
     model = User
     template_name = 'accounts/profile_update.html'
     fields = ('first_name', 'last_name', 'username', 'phone_number', 'profile_picture', 'birth_date', 'country', 'facebook')
-    pk_url_kwarg = 'pk'
+
+    # success_url = reverse_lazy('accounts:profile')
+    
 
 
 

@@ -1,32 +1,39 @@
 {% extends 'base.html' %}
 
-{% block content %}
+{% block title %} Log in {% endblock %}
 
-<div class="row">
-  <div class="col-md-4"></div>
-    <div class="col-md-4">
-      <div class="card mt-5 shadow">
-        <div class="card-body">
-          <div class="card-title py-3">
-            <h1>Log in</h1>
-          </div>
-            <form action="{% url 'accounts:login' %}" method="post" novalidate>
-              {% csrf_token %}
-              {% include 'includes/form.html' %}
-              <div class="text-center col-12">
-              <input class=" btn btn-primary my-2 col-11 p-2" type="submit" value="Log in">
-              </div>
-              <div class="text-center">
-              <a href="{% url 'accounts:password_reset' %}">Forgotten password?</a>
-              </div>
-              <div class=" my-3 text-center">
-              <a class="btn btn-success p-2" href="{% url 'accounts:register' %}">Create an account</a>
-              </div>
-            </form>
+{% block content %}
+<div class="container">
+  <br><br><div class="row">
+    <div class="col-md-6 p-5 mt-5">
+    <br><h1>Crowds</h1>
+    <h4>Bring your ideas to life!</h4>
+    </div>
+      <div class="col-md-5">
+        <div class="card mt-5 shadow">
+          <div class="card-body">
+            <div class="card-title py-2">
+              <h1>Log in</h1>
+            </div>
+              <form action="{% url 'accounts:login' %}" method="post" novalidate>
+                {% csrf_token %}
+                {% include 'includes/form.html' %}
+                <div class="text-center col-12">
+                <input class=" btn btn-primary my-2 col-11 p-2" type="submit" value="Log in">
+                </div>
+                <div class="text-center">
+                <p>Forgotten password? <a href="{% url 'accounts:password_reset' %}">Reset</a></p>
+                </div>
+                <div class=" my-3 text-center">
+                <a class="btn btn-success p-2" href="{% url 'accounts:register' %}">Create an account</a>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  <div class="col-md-4"></div>
+    {% comment %} <div class="col-md-3"></div> {% endcomment %}
+  </div>
 </div>
+
 {% endblock content %}

@@ -2,38 +2,51 @@
 
 <!-- page title -->
 {% block title %} {{ user.first_name }} {{ user.last_name }} {% endblock %}
+
+<!-- page nav -->
+{% block navbar %} {% include 'navbar.html' %} {% endblock %}
+
+<!-- page content -->
 {%block content %}
-<div class="row px-2">
+<div class="row px-2 my-1">
   <div class="col-10 mx-auto">
     <!-- Profile widget -->
     <div class="bg-white shadow rounded overflow-hidden">
       <div class="px-4 pt-0 pb-4 bg-dark">
-        <div class="media align-items-end profile-header">
-          <div class="profile mr-3">
-            <img
-              src="{{ user.profile_picture.url }}"
-              alt="..."
-              width="130"
-              height="130"
-              class="mb-2 border border-3 border-secondary rounded"
-            />
-            <div class="media-body mb-5 text-white">
+        <div class="mb-4 media align-items-end profile-header">
+          <div class="profile mr-3 text-center">
+            <div>
+              <img
+                src="{{ user.profile_picture.url }}"
+                alt="..."
+                width="130"
+                height="120"
+                class="mb-2 border border-3 border-secondary rounded"
+              />
+            </div>
+            <div class="media-body text-white">
               <h4 class="mt-0 mb-0">
                 {{ user.first_name }} {{ user.last_name }}
               </h4>
-              <p class="small mb-4">
+              <p class="small">
                 <i class="fa fa-map-marker mr-2"></i>{{ user.country.name }}
               </p>
             </div>
           </div>
-          <a href="#" class="btn btn-dark btn-sm btn-block">Edit profile</a>
+          {% if request.user.pk == user.pk %}
+          <a
+            href="{% url 'accounts:profile_update' user.pk %}"
+            class="btn btn-outline-light btn-sm btn-block"
+            >Edit profile</a
+          >
+          {% endif %}
         </div>
       </div>
 
-      <div class="bg-light p-4 d-flex justify-content-end text-center">
+      <div class="bg-dark px-4 py-2 d-flex justify-content-end text-center">
         <ul class="list-inline mb-0">
           <li class="list-inline-item">
-            <h5 class="font-weight-bold mb-0 d-block">
+            <h5 class="text-light font-weight-bold mb-0 d-block">
               {{ user.project_set.count }}
             </h5>
             <small class="text-muted">
@@ -41,7 +54,7 @@
             >
           </li>
           <li class="list-inline-item">
-            <h5 class="font-weight-bold mb-0 d-block">
+            <h5 class="text-light font-weight-bold mb-0 d-block">
               {{ user.donation_set.count }}
             </h5>
             <small class="text-muted">
@@ -54,18 +67,23 @@
       <div class="py-4 px-4">
         <div class="d-flex align-items-center justify-content-between mb-3">
           <h5 class="mb-0">Recent projects</h5>
-          <a href="#" class="btn btn-link text-muted">Show all</a>
+          <a
+            href="{% url 'projects:project_list' %}"
+            >Show all</a
+          >
         </div>
         <div class="row d-flex justify-content-center">
           {% for project in user.project_set.all %}
           <div class="card col-4 mx-3 p-2 shadow">
-            <img
-              src="{{ project.images.url }}"
-              class="card-img-top"
-              alt="{{ project.title }}"
-            />
+            <a href="{% url 'projects:project_details' project.pk %}">
+              <img
+                src="{{ project.images.url }}"
+                class="card-img-top"
+                alt="{{ project.title }}"
+              />
             <div class="card-body">
               <h5 class="card-title">{{ project.title }}</h5>
+            </a>
               <div>
                 {% for tag in project.tags.all %}
                 <button

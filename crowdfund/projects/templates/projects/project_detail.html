@@ -1,8 +1,13 @@
 {% extends 'base.html' %}
 
 <!-- page title -->
-{% block title %} {{ project.title }} {% endblock %} {% block content %}
+{% block title %} {{ project.title }} {% endblock %}
 
+<!-- page nav -->
+{% block navbar %} {% include 'navbar.html' %} {% endblock %}
+
+<!-- page content -->
+{% block content %}
 <h2>{{ project.title }}</h2>
 <h2>{{ project.details }}</h2>
 <h2>{{ project.category }}</h2>

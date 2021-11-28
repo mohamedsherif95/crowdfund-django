@@ -3,6 +3,10 @@
 <!-- page title -->
 {% block title %} Edit profile {% endblock %}
 
+<!-- page nav -->
+{% block navbar %} {% include 'navbar.html' %} {% endblock %}
+
+<!-- page content -->
 {% block content %}
 <div class="row">
   <div class="col-2"></div>
@@ -11,14 +15,14 @@
         <div class="card-body">
           <div class="card-title py-3">
             {% if request.user.pk == user.pk %}
-                <h1>Edit your profile</h1>
+                <h2>Edit your personal information</h2>
                 </div>
                     <form action="{% url 'accounts:profile_update' user.pk %}" method="post" novalidate>
                     {% csrf_token %}
                     {% include 'includes/form.html' %}
                     <div class="text-center col-12">
-                    <input class=" btn btn-success my-2 col-11 p-2" type="submit" value="Confirm">
-                    <input class=" btn btn-secondary my-2 col-11 p-2" type="reset" value="Cancel">
+                    <input class=" btn btn-success m-4 col-2 p-2" type="submit" value="Save">
+                    <input class=" btn btn-secondary m-4 col-2 p-2" type="reset" value="Reset">
                     </div>
                     </form>
                 </div>

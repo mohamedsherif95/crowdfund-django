@@ -1,21 +1,18 @@
-from django.http import HttpResponse
 from django.views.generic import CreateView, ListView, DetailView
 from .models import Project
 from .forms import AddProjectForm
-from django.urls import reverse_lazy
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 
 
 # Create your views here.
 def index(request):
-    return HttpResponse("<h1>Home Page</h1>")
+    return render(request, 'projects/home.html')
 
 
 class AddProject(CreateView):
     model = Project
     form_class = AddProjectForm
     template_name = 'projects/add_project.html'
-    # success_url = reverse_lazy('projects:home')
 
     def form_valid(self, form):
         obj = form.save(commit=False)
