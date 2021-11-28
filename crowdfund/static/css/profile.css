@@ -1,0 +1,13 @@
+.profile-header {
+  transform: translateY(5rem);
+}
+
+body {
+  background: #cfcdd3;
+  min-height: 100vh;
+}
+
+#project-title {
+  text-decoration: none;
+  color: black;
+}

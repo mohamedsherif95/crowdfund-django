@@ -1,4 +1,4 @@
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from .utils import token_generator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_text
@@ -15,6 +15,7 @@ from django.core.mail import send_mail, BadHeaderError
 from .models import User
 from .forms import UserForm, LoginForm
 from django.views import View
+from django.views.generic import DetailView, UpdateView
 
 
 def landing(request):
@@ -87,6 +88,21 @@ class UserLogoutView(View):
     def get(self, request):
         auth.logout(request)
         return redirect('accounts:login')
+
+
+class ProfileView(DetailView):
+    model = User
+    template_name = 'accounts/user_profile.html'
+
+
+class ProfileUpdate(UpdateView):
+    model = User
+    template_name = 'accounts/profile_update.html'
+    fields = ('first_name', 'last_name', 'username', 'phone_number', 'profile_picture', 'birth_date', 'country', 'facebook')
+
+    # success_url = reverse_lazy('accounts:profile')
+    
+
 
 
 def password_reset_request(request):
