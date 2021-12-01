@@ -8,9 +8,24 @@
 
 <!-- page content -->
 {% block content %}
-<h2>{{ project.title }}</h2>
-<h2>{{ project.details }}</h2>
-<h2>{{ project.category }}</h2>
-<img src="{{ project.images.url }}" width="500px" />
+<div class="container d-flex justify-content-center">
+    <div class="card p-3 col-6 shadow">
+        <img src="{{ project.images.url }}" />
+        <h2>{{ project.title }} | {{ project.category }}</h2>
+        <p>{{ project.details }}</p>
+        <table class="table">
+            <tr>
+                <th>Doner</th>
+                <th>Amount</th>
+            </tr>
+            {% for donation in project.donation_set.all %}
+                <tr>
+                    <td><a href="{% url 'accounts:profile' donation.user.pk %}">{{ donation.user.username }}</a></td>
+                    <td>{{ donation.amount }} EGP</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
 
 {% endblock %}

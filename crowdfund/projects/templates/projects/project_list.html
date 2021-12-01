@@ -8,12 +8,28 @@
 
 <!-- page content -->
 {% block content %}
-<h1>Projects</h1>
-<ul>
+<div class="row d-flex justify-content-around">
   {% for project in object_list %}
-  <li>{{ project.title }} - {{ project.details }}</li>
+    <div class="card my-2 p-1 col-3 shadow">
+      <img src="{{ project.images.url }}" />
+        <h4 class="d-inline">{{ project.title }} | {{ project.category }}</h4>
+        <h6>{{ project.get_details }}... <a href="{% url 'projects:project_details' project.pk %}">see more</a></h6>
+        <a href="{% url 'projects:make_donation' project.pk %}" class="btn btn-success">Make a donation</a>
+      <table class="table">
+          <tr>
+              <th>Doner</th>
+              <th>Amount</th>
+          </tr>
+          {% for donation in project.donation_set.all %}
+              <tr>
+                  <td><a href="{% url 'accounts:profile' donation.user.pk %}">{{ donation.user.username }}</a></td>
+                  <td>{{ donation.amount }} EGP</td>
+              </tr>
+          {% endfor %}
+      </table>
+    </div>
   {% empty %}
   <li>No projects yet.</li>
   {% endfor %}
-</ul>
+</div>
 {% endblock %}

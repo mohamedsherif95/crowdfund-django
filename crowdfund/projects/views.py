@@ -1,6 +1,6 @@
 from django.views.generic import CreateView, ListView, DetailView
-from .models import Project
-from .forms import AddProjectForm
+from .models import Donation, Project
+from .forms import AddProjectForm, MakeDonationForm
 from django.shortcuts import redirect, render
 from django.db.models import Q
 
@@ -43,3 +43,22 @@ class ProjectSearch(ListView):
 class ProjectDetails(DetailView):
 
     model = Project
+
+
+class MakeDonation(CreateView):
+    model = Donation
+    form_class = MakeDonationForm
+    template_name = 'projects/make_donation.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        project_pk = self.kwargs['pk']
+        context["project_pk"] = project_pk
+        return context
+
+    def form_valid(self, form):
+        obj = form.save(commit=False)
+        obj.user = self.request.user
+        obj.project = Project.objects.get(pk=self.kwargs['pk'])
+        obj.save()
+        return redirect('projects:project_details', self.kwargs['pk'])

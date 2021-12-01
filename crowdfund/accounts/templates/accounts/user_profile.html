@@ -96,7 +96,7 @@
                 {% endfor %}
               </div>
               <p class="card-text">{{ project.details }}</p>
-              <a href="#" class="btn btn-success">Donate</a>
+              <a href="{% url 'projects:make_donation' project.pk %}" class="btn btn-success">Donate</a>
             </div>
           </div>
           {% endfor %}
