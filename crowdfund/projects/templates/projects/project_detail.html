@@ -9,7 +9,7 @@
 <!-- page content -->
 {% block content %}
 <div class="container d-flex justify-content-center">
-    <div class="card p-3 col-6 shadow">
+    <div class="card p-3 m-2 col-6 shadow">
         <img src="{{ project.images.url }}" />
         <h2>{{ project.title }} | {{ project.category }}</h2>
         <p>{{ project.details }}</p>
@@ -25,6 +25,26 @@
                 </tr>
             {% endfor %}
         </table>
+    </div>
+    <div class="card p-3 col-6 m-2 shadow">
+        <form class="form" action="{% url 'projects:project_comment' project.pk %}" method="post">
+            {% csrf_token %}
+            <div class="mb-3 justify-content-end">
+                <input type="text" name="comment" class="form-control" placeholder="Leave a comment here">
+                <input class=" my-1 btn btn-primary" type="submit" value="Comment">
+            </div>
+        </form>
+        <div class="list-group">
+            {% for comment in project.comment_set.all reversed %}
+            <a href="{% url 'accounts:profile' comment.user.pk %}" class="list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">{{ comment.user.username }}</h5>
+                    <small class="text-muted">{{ comment.created }}</small>
+                </div>
+                <p class="mb-1">{{ comment.comment }}</p>
+            </a>
+            {% endfor %}
+        </div>
     </div>
 </div>
 
