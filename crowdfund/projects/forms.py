@@ -1,5 +1,5 @@
 from django import forms 
-from .models import Project
+from .models import Project, Donation
 from django.forms.widgets import NumberInput
 
 class AddProjectForm(forms.ModelForm):
@@ -14,6 +14,12 @@ class AddProjectForm(forms.ModelForm):
         model = Project
         fields = '__all__'
         exclude = ('user',)
+
+
+class MakeDonationForm(forms.ModelForm):
+    class Meta:
+        model = Donation
+        fields = ['amount']
 
 
 # class ImageForm(forms.ModelForm):

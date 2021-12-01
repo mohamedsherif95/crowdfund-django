@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+<!-- page title -->
+{% block title %} Add Project {% endblock %}
+
+<!-- page nav -->
+{% block navbar %} {% include 'navbar.html' %} {% endblock %}
+
+<!-- page content -->
+{% block content %}
+<div class="d-flex justify-content-center">
+  <div class="card my-5 col-4 shadow">
+    <div class="card-body">
+      <div class="card-title py-3">
+        <h5>Enter the amount you would like to donate</h5>
+      </div>
+      <div>
+        <form
+          class="form"
+          action="{% url 'projects:make_donation' pk=project_pk %}"
+          method="post"
+          novalidate
+        >
+          {% csrf_token %}
+
+          <!-- form variable -->
+          {% include 'includes/form.html' %}
+          <div class="col-12 text-center">
+            <input
+              type="submit"
+              name="sumbit"
+              class="my-2 btn btn-success col-4 p-2"
+              value="Donate"
+            />
+            <div class="text-center"></div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
