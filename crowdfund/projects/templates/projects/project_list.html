@@ -7,29 +7,42 @@
 {% block navbar %} {% include 'navbar.html' %} {% endblock %}
 
 <!-- page content -->
-{% block content %}
-<div class="row d-flex justify-content-around">
-  {% for project in object_list %}
-    <div class="card my-2 p-1 col-3 shadow">
-      <img src="{{ project.images.url }}" />
-        <h4 class="d-inline">{{ project.title }} | {{ project.category }}</h4>
-        <h6>{{ project.get_details }}... <a href="{% url 'projects:project_details' project.pk %}">see more</a></h6>
-        <a href="{% url 'projects:make_donation' project.pk %}" class="btn btn-success">Make a donation</a>
-      <table class="table">
-          <tr>
-              <th>Doner</th>
-              <th>Amount</th>
-          </tr>
-          {% for donation in project.donation_set.all %}
-              <tr>
-                  <td><a href="{% url 'accounts:profile' donation.user.pk %}">{{ donation.user.username }}</a></td>
-                  <td>{{ donation.amount }} EGP</td>
-              </tr>
-          {% endfor %}
-      </table>
-    </div>
-  {% empty %}
-  <li>No projects yet.</li>
-  {% endfor %}
+<div class="container d-flex justify-content-around">
 </div>
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+          {% for project in object_list %}
+          <div class="card p-1 col-3 shadow">
+                <img src="{{ project.images.url }}" />
+                <div class="d-flex justify-content-between">
+                  <h5>{{ project.title }} | {{ project.category }}</h5>
+                  <div class="dropdown">
+                    <a class="link-dark text-decoration-none fw-bolder m-1" href="" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">. . .</a>
+                    <ul class="dropdown-menu rounded-3 shadow-lg" aria-labelledby="dropdownMenuButton1">
+                      <li><a class="dropdown-item" href="{% url 'projects:make_donation' project.pk %}">Donate</a></li>
+                      <li><a class="dropdown-item" href="{% url 'accounts:profile' project.user.pk %}">Owner profile</a></li>
+                      <li><hr class="dropdown-divider"></li>
+                      <li><a class="dropdown-item" href="#">Report</a></li>
+                    </ul>
+                  </div>
+                </div>
+                <div>
+                  {% for tag in project.tags.all %}
+                  <button
+                  type="button"
+                  class="btn btn-outline-primary btn-sm"
+                    disabled
+                    >
+                    {{ tag }}
+                  </button>
+                  {% endfor %}
+                </div>
+                <hp>{{ project.get_details }}... <a class="link-dark" href="{% url 'projects:project_details' project.pk %}">see more</a></hp>
+              </div>
+            {% empty %}
+            <li>No projects yet.</li>
+            {% endfor %}
+        </div>
+    </div>
 {% endblock %}

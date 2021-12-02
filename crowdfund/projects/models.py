@@ -29,7 +29,7 @@ class Project(models.Model):
         return self.title
 
     def get_details(self):
-        return self.details[:35]
+        return self.details[:25]
 
 class Image(models.Model):
     project = models.ForeignKey(Project, default=None, on_delete=models.CASCADE, blank=True, null=True)
@@ -37,7 +37,6 @@ class Image(models.Model):
 
 
 class Donation(models.Model):
-    
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     amount = models.PositiveIntegerField()
@@ -45,5 +44,15 @@ class Donation(models.Model):
 
     def __str__(self):
         return f"{self.amount} from {self.user.username} to {self.project.title}"
-    
+
+
+class Comment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    comment = models.TextField()
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"user: {self.user.username}, project: {self.project.title}"
+
     
