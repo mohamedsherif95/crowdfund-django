@@ -31,9 +31,9 @@ class Project(models.Model):
     def get_details(self):
         return self.details[:35]
 
-# class Images(models.Model):
-#     post = models.ForeignKey(Project, default=None, on_delete=models.CASCADE, blank=True, null=True)
-#     image = models.ImageField(upload_to='images/', blank=True, null=True)
+class Image(models.Model):
+    project = models.ForeignKey(Project, default=None, on_delete=models.CASCADE, blank=True, null=True)
+    image = models.ImageField( blank=True, null=True)
 
 
 class Donation(models.Model):

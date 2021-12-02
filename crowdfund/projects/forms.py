@@ -1,9 +1,11 @@
+from typing import ValuesView
 from django import forms 
 from .models import Project, Donation
 from django.forms.widgets import NumberInput
+from django.forms.models import inlineformset_factory
 
 class AddProjectForm(forms.ModelForm):
-
+    
     start_time = forms.DateField(label="Start Date", required=True,
      widget=NumberInput(attrs={'type':'date'}))
 
