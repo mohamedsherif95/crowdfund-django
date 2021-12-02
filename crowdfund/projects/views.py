@@ -62,7 +62,6 @@ class ProjectDetails(DetailView):
         return context
 
 
-
 class MakeDonation(CreateView):
     model = Donation
     form_class = MakeDonationForm
