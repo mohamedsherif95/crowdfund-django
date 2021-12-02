@@ -27,7 +27,11 @@
           <!-- form variable -->
 
            {% include 'includes/form.html' %} 
-           <input required name="images" type="file" multiple class="form-control-file"/>
+           {% comment %} <input required name="images" type="file" multiple class="form-control-file"/> {% endcomment %}
+           <div class="my-2">
+            <label for="formFileMultiple" class="form-label">(Optional) Add More Images:</label>
+            <input class="form-control" name="images" type="file" id="formFileMultiple" multiple>
+          </div>
           <p class="text-muted small">- fields with * are required <br /></p>
           <div class="col-12 text-center">
             <input

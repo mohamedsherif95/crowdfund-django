@@ -1,6 +1,7 @@
 from django.db import models
 from taggit.managers import TaggableManager
 from accounts.models import User
+from django.utils.translation import gettext_lazy as _
 
 # Create your models here.
 class Project(models.Model):
@@ -17,7 +18,7 @@ class Project(models.Model):
         choices=CATEGORY_CHOICES,
         default='SC',
     )
-    images = models.ImageField(null=False, blank=False)
+    images = models.ImageField(_('Project Cover'),null=False, blank=False)
     total_target = models.PositiveIntegerField()
     current = models.PositiveIntegerField(default=0)
     tags = TaggableManager()
