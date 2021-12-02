@@ -25,7 +25,9 @@
           {% csrf_token %}
 
           <!-- form variable -->
-          {% include 'includes/form.html' %}
+
+           {% include 'includes/form.html' %} 
+           <input required name="images" type="file" multiple class="form-control-file"/>
           <p class="text-muted small">- fields with * are required <br /></p>
           <div class="col-12 text-center">
             <input

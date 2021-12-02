@@ -1,5 +1,5 @@
 from django.views.generic import CreateView, ListView, DetailView
-from .models import Comment, Donation, Project
+from .models import Comment, Donation, Project, Image
 from .forms import AddProjectForm, MakeDonationForm
 from django.shortcuts import redirect, render
 from django.db.models import Q
@@ -18,8 +18,11 @@ class AddProject(CreateView):
     def form_valid(self, form):
         obj = form.save(commit=False)
         obj.user = self.request.user
+        images = self.request.FILES.getlist('images')
         obj.save()
         form.save_m2m()
+        for image in images:
+            photo = Image.objects.create(project=obj,image=image)
         return redirect('projects:home')
 
 
