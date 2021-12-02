@@ -26,7 +26,7 @@ class AddProject(CreateView):
 class ProjectList(ListView):
 
     model = Project
-    paginate_by = 5
+    # paginate_by = 100
 
 class ProjectSearch(ListView):
 
@@ -43,6 +43,20 @@ class ProjectSearch(ListView):
 class ProjectDetails(DetailView):
 
     model = Project
+
+    def get_similar_projects(self):
+        project_tags_ids = self.tags.values_list('id', flat=True)
+        print('excuted')
+        print(project_tags_ids)
+        return project_tags_ids
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        project = Project.objects.get(pk=self.kwargs['pk'])
+        project_tags_ids = project.tags.values_list('id', flat=True)
+        similar_projects = Project.objects.filter(tags__in=project_tags_ids).exclude(id=project.id).distinct()
+        context["similar_projects"] = similar_projects
+        return context
 
 
 class MakeDonation(CreateView):
@@ -68,6 +82,7 @@ class LeaveComment(CreateView):
     model = Comment
     template_name = 'projects/project_comment.html'
     fields = ['comment']
+
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
