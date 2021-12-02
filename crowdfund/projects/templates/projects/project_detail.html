@@ -9,22 +9,127 @@
 <!-- page content -->
 {% block content %}
 <div class="container d-flex justify-content-center">
-    <div class="card p-3 col-6 shadow">
+    <div class="card p-3 m-2 col-6 shadow">
         <img src="{{ project.images.url }}" />
-        <h2>{{ project.title }} | {{ project.category }}</h2>
+        <div class="d-flex justify-content-between">
+            <h3>{{ project.title }} | {{ project.category }}</h3>
+            <div class="dropdown">
+              <a class="link-dark text-decoration-none fw-bolder m-1" href="" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">. . .</a>
+              <ul class="dropdown-menu rounded-3 shadow-lg" aria-labelledby="dropdownMenuButton1">
+                <li><a class="dropdown-item" href="{% url 'accounts:profile' project.user.pk %}">Owner profile</a></li>
+                <li><a class="dropdown-item" href="#">Report</a></li>
+              </ul>
+            </div>
+          </div>
+        <div>
+            {% for tag in project.tags.all %}
+            <button
+            type="button"
+            class="btn btn-outline-primary btn-sm"
+              disabled
+              >
+              {{ tag }}
+            </button>
+            {% endfor %}
+          </div>
         <p>{{ project.details }}</p>
         <table class="table">
-            <tr>
-                <th>Doner</th>
-                <th>Amount</th>
-            </tr>
-            {% for donation in project.donation_set.all %}
+            <thead>
+                <tr>
+                    <th>Target</th>
+                    <th>Current</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ project.total_target }} EGP</td>
+                    <td>{{ project.current }} EGP</td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Doner</th>
+                    <th>Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for donation in project.donation_set.all %}
                 <tr>
                     <td><a href="{% url 'accounts:profile' donation.user.pk %}">{{ donation.user.username }}</a></td>
                     <td>{{ donation.amount }} EGP</td>
                 </tr>
             {% endfor %}
+            </tbody>
         </table>
+        <div class="text-center">
+            <a class="btn btn-success btn-lg col-8" href="{% url 'projects:make_donation' project.pk %}">Make a donation</a>
+        </div>
+    </div>
+    <div class="card p-3 col-6 m-2 shadow">
+        <form class="form" action="{% url 'projects:project_comment' project.pk %}" method="post">
+            {% csrf_token %}
+            <div class="mb-3 justify-content-end">
+                <input type="text" name="comment" class="form-control" placeholder="Leave a comment here">
+                <input class=" my-1 btn btn-primary" type="submit" value="Comment">
+            </div>
+        </form>
+        <div class="list-group">
+            {% for comment in project.comment_set.all reversed %}
+            <div class="list-group-item">
+                <div class="d-flex w-100 justify-content-between">
+                    <a href="{% url 'accounts:profile' comment.user.pk %}"><h5 class="mb-1">{{ comment.user.username }}</h5></a>
+                    <div class="dropdown">
+                        <a class="link-dark text-decoration-none fw-bolder m-1" href="" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">. . .</a>
+                        <ul class="dropdown-menu rounded-3 shadow-lg" aria-labelledby="dropdownMenuButton1">
+                            <li><a class="dropdown-item" href="#">Reply</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#">Report</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <small class="text-muted mb-1">{{ comment.created }}</small>
+                <p class="mb-1">{{ comment.comment }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row"><h2>Similar Projects</h2></div>
+    <div class="row">
+        {% for project in similar_projects %}
+        <div class="card p-1 col-4 shadow">
+        <img src="{{ project.images.url }}" />
+        <div class="d-flex justify-content-between">
+            <h5>{{ project.title }} | {{ project.category }}</h5>
+            <div class="dropdown">
+            <a class="link-dark text-decoration-none fw-bolder m-1" href="" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">. . .</a>
+            <ul class="dropdown-menu rounded-3 shadow-lg" aria-labelledby="dropdownMenuButton1">
+                <li><a class="dropdown-item" href="{% url 'projects:make_donation' project.pk %}">Donate</a></li>
+                <li><a class="dropdown-item" href="{% url 'accounts:profile' project.user.pk %}">Owner profile</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="#">Report</a></li>
+            </ul>
+            </div>
+        </div>
+        <div>
+            {% for tag in project.tags.all %}
+            <button
+            type="button"
+            class="btn btn-outline-primary btn-sm"
+            disabled
+            >
+            {{ tag }}
+            </button>
+            {% endfor %}
+        </div>
+        <hp>{{ project.get_details }}... <a class="link-dark" href="{% url 'projects:project_details' project.pk %}">see more</a></hp>
+        </div>
+    {% empty %}
+        <h4>No similar projects.</h4>
+    {% endfor %}
     </div>
 </div>
 
