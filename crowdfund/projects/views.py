@@ -1,4 +1,5 @@
-from django.views.generic import CreateView, ListView, DetailView
+from django.views.generic import CreateView, ListView, DetailView, DeleteView
+from django.urls import reverse_lazy
 from .models import Comment, Donation, Project, Image
 from .forms import AddProjectForm, MakeDonationForm
 from django.shortcuts import redirect, render
@@ -60,6 +61,23 @@ class ProjectDetails(DetailView):
         similar_projects = Project.objects.filter(tags__in=project_tags_ids).exclude(id=project.id).distinct()
         context["similar_projects"] = similar_projects
         return context
+
+
+class ProjectCancel(DeleteView):
+    model = Project
+    template_name = 'projects/project_cancel.html'
+    success_url = reverse_lazy('projects:home')
+
+
+# class DeleteComment(DeleteView):
+#     model = Comment
+#     template_name = 'projects/delete_comment.html'
+
+#     def get_success_url(self):
+#         return reverse_lazy('accounts:profile', self.request.user.pk)
+
+#     def get(self, *args, **kwargs):
+#         return self.post(*args, **kwargs)
 
 
 class MakeDonation(CreateView):

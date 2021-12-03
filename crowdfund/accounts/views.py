@@ -90,6 +90,10 @@ class UserLogoutView(View):
         return redirect('accounts:login')
 
 
+def profile(request):
+    return redirect('accounts:profile', request.user.pk)
+
+
 class ProfileView(DetailView):
     model = User
     template_name = 'accounts/user_profile.html'
