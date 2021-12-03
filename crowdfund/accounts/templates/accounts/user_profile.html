@@ -96,7 +96,9 @@
                 {% endfor %}
               </div>
               <p class="card-text">{{ project.details }}</p>
-              <a href="{% url 'projects:make_donation' project.pk %}" class="btn btn-success">Donate</a>
+              {% if request.user != user and not project.target_reached %}
+                <a href="{% url 'projects:make_donation' project.pk %}" class="btn btn-success">Donate</a>
+              {% endif %}
             </div>
           </div>
           {% endfor %}

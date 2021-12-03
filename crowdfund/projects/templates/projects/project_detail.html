@@ -67,9 +67,11 @@
             {% endfor %}
             </tbody>
         </table>
-        <div class="text-center">
-            <a class="btn btn-success btn-lg col-8" href="{% url 'projects:make_donation' project.pk %}">Make a donation</a>
-        </div>
+        {% if not project.target_reached %}
+            <div class="text-center">
+                <a class="btn btn-success btn-lg col-8" href="{% url 'projects:make_donation' project.pk %}">Make a donation</a>
+            </div>
+        {% endif %}
     </div>
     <div class="card p-3 col-6 m-2 shadow">
         <form class="form" action="{% url 'projects:project_comment' project.pk %}" method="post">

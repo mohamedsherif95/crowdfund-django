@@ -4,6 +4,7 @@ from .models import Comment, Donation, Project, Image
 from .forms import AddProjectForm, MakeDonationForm
 from django.shortcuts import redirect, render
 from django.db.models import Q
+from django.contrib import messages
 
 
 # Create your views here.
@@ -87,14 +88,19 @@ class MakeDonation(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        project_pk = self.kwargs['pk']
-        context["project_pk"] = project_pk
+        project = Project.objects.get(pk=self.kwargs['pk'])
+        context["project"] = project
         return context
 
     def form_valid(self, form):
         obj = form.save(commit=False)
         obj.user = self.request.user
-        obj.project = Project.objects.get(pk=self.kwargs['pk'])
+        project = Project.objects.get(pk=self.kwargs['pk'])
+        new_current = project.current + obj.amount
+        if new_current > project.total_target:
+            messages.error(self.request, 'the amount donated would exceed the fund target. Please recalculate.')
+            return redirect('projects:make_donation', self.kwargs['pk'])
+        obj.project = project
         obj.save()
         return redirect('projects:project_details', self.kwargs['pk'])
 

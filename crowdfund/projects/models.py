@@ -35,6 +35,9 @@ class Project(models.Model):
     def can_cancel(self):
         return self.current < (self.total_target * 0.25)
 
+    def target_reached(self):
+        return self.current == self.total_target
+
 class Image(models.Model):
     project = models.ForeignKey(Project, default=None, on_delete=models.CASCADE, blank=True, null=True)
     image = models.ImageField( blank=True, null=True)
