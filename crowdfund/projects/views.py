@@ -9,7 +9,19 @@ from django.contrib import messages
 
 # Create your views here.
 def index(request):
-    return render(request, 'projects/home.html')
+    # top_rated = Project.objects.order_by('-rating')[:5]
+    top_featured = Project.objects.filter(is_featured=True).order_by('-start_time')[:5]
+    top_latest = Project.objects.order_by('-start_time')[:5]
+
+    context = {
+        'top_latest': top_latest,
+        # 'top_rated': top_rated,
+        'top_featured': top_featured,
+    }
+    print(context['top_featured'])
+    print(context['top_featured'][0].category)
+    print(context['top_featured'][1].category)
+    return render(request, 'projects/home.html', context)
 
 
 class AddProject(CreateView):
@@ -68,17 +80,6 @@ class ProjectCancel(DeleteView):
     model = Project
     template_name = 'projects/project_cancel.html'
     success_url = reverse_lazy('projects:home')
-
-
-# class DeleteComment(DeleteView):
-#     model = Comment
-#     template_name = 'projects/delete_comment.html'
-
-#     def get_success_url(self):
-#         return reverse_lazy('accounts:profile', self.request.user.pk)
-
-#     def get(self, *args, **kwargs):
-#         return self.post(*args, **kwargs)
 
 
 class MakeDonation(CreateView):

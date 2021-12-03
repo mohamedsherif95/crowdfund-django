@@ -67,7 +67,7 @@
             {% endfor %}
             </tbody>
         </table>
-        {% if not project.target_reached %}
+        {% if not project.target_reached and project.user != request.user %}
             <div class="text-center">
                 <a class="btn btn-success btn-lg col-8" href="{% url 'projects:make_donation' project.pk %}">Make a donation</a>
             </div>
