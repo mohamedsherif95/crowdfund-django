@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 <!-- page title -->
-{% block title %} Edit profile {% endblock %}
+{% block title %} Delete this account {% endblock %}
 
 <!-- page nav -->
 {% block navbar %} {% include 'navbar.html' %} {% endblock %}
@@ -15,16 +15,14 @@
         <div class="card-body">
           <div class="card-title py-3">
             {% if request.user.pk == user.pk %}
-                <h2>Edit your personal information</h2>
+                <h2>Account deletion confirmation</h2>
                 </div>
-                    <form action="{% url 'accounts:profile_update' user.pk %}" method="post" novalidate>
+                    <form action="{% url 'accounts:profile_delete' user.pk %}" method="post" novalidate>
                     {% csrf_token %}
-                    {% include 'includes/form.html' %}
-                    <div class="text-center col-12">
-                    <input class=" btn btn-success m-4 col-2 p-2" type="submit" value="Save">
-                    <input class=" btn btn-secondary m-4 col-2 p-2" type="reset" value="Reset">
-                    <a href="{% url 'accounts:profile_delete' user.pk %}" class="btn btn-danger m-4 col-2 p-2">Delete Account</a>
-                    </div>
+                    <p class="alert alert-danger" role="alert">
+                        Are you sure you want to delete your account?
+                    </p>
+                    <input class=" btn btn-danger m-4 col-2 p-2" type="submit" value="Confirm">
                     </form>
                 </div>
             {% else %}

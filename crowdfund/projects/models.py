@@ -36,6 +36,9 @@ class Image(models.Model):
     project = models.ForeignKey(Project, default=None, on_delete=models.CASCADE, blank=True, null=True)
     image = models.ImageField( blank=True, null=True)
 
+    def __str__(self):
+        return f"id: {self.id}, Project: {self.project}"
+
 
 class Donation(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
