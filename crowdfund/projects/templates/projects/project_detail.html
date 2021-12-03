@@ -16,8 +16,12 @@
             <div class="dropdown">
               <a class="link-dark text-decoration-none fw-bolder m-1" href="" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">. . .</a>
               <ul class="dropdown-menu rounded-3 shadow-lg" aria-labelledby="dropdownMenuButton1">
-                <li><a class="dropdown-item" href="{% url 'accounts:profile' project.user.pk %}">Owner profile</a></li>
-                <li><a class="dropdown-item" href="#">Report</a></li>
+                {% if request.user == project.user %}
+                <li><a class="dropdown-item" href="{% url 'projects:project_cancel' project.pk %}">cancel project</a></li>
+                {% else %}
+                    <li><a class="dropdown-item" href="{% url 'accounts:profile' project.user.pk %}">owner profile</a></li>
+                    <li><a class="dropdown-item" href="#">report</a></li>
+                {% endif %}
               </ul>
             </div>
           </div>
@@ -63,9 +67,11 @@
             {% endfor %}
             </tbody>
         </table>
-        <div class="text-center">
-            <a class="btn btn-success btn-lg col-8" href="{% url 'projects:make_donation' project.pk %}">Make a donation</a>
-        </div>
+        {% if not project.target_reached %}
+            <div class="text-center">
+                <a class="btn btn-success btn-lg col-8" href="{% url 'projects:make_donation' project.pk %}">Make a donation</a>
+            </div>
+        {% endif %}
     </div>
     <div class="card p-3 col-6 m-2 shadow">
         <form class="form" action="{% url 'projects:project_comment' project.pk %}" method="post">
@@ -83,9 +89,15 @@
                     <div class="dropdown">
                         <a class="link-dark text-decoration-none fw-bolder m-1" href="" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">. . .</a>
                         <ul class="dropdown-menu rounded-3 shadow-lg" aria-labelledby="dropdownMenuButton1">
-                            <li><a class="dropdown-item" href="#">Reply</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="#">Report</a></li>
+                            {% if request.user == comment.user %}
+                              <li><a class="dropdown-item" href="#">reply</a></li>
+                              <li><hr class="dropdown-divider"></li>
+                              <li><a class="dropdown-item" href="#">delete</a></li>
+                            {% else %}
+                              <li><a class="dropdown-item" href="#">reply</a></li>
+                              <li><hr class="dropdown-divider"></li>
+                              <li><a class="dropdown-item" href="#">report</a></li>
+                            {% endif %}
                         </ul>
                     </div>
                 </div>
@@ -100,36 +112,38 @@
     <div class="row"><h2>Similar Projects</h2></div>
     <div class="row">
         {% for project in similar_projects %}
-        <div class="card p-1 col-4 shadow">
-        <img src="{{ project.images.url }}" />
-        <div class="d-flex justify-content-between">
-            <h5>{{ project.title }} | {{ project.category }}</h5>
-            <div class="dropdown">
-            <a class="link-dark text-decoration-none fw-bolder m-1" href="" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">. . .</a>
-            <ul class="dropdown-menu rounded-3 shadow-lg" aria-labelledby="dropdownMenuButton1">
-                <li><a class="dropdown-item" href="{% url 'projects:make_donation' project.pk %}">Donate</a></li>
-                <li><a class="dropdown-item" href="{% url 'accounts:profile' project.user.pk %}">Owner profile</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="#">Report</a></li>
-            </ul>
-            </div>
-        </div>
-        <div>
-            {% for tag in project.tags.all %}
-            <button
-            type="button"
-            class="btn btn-outline-primary btn-sm"
-            disabled
-            >
-            {{ tag }}
-            </button>
-            {% endfor %}
-        </div>
-        <hp>{{ project.get_details }}... <a class="link-dark" href="{% url 'projects:project_details' project.pk %}">see more</a></hp>
-        </div>
-    {% empty %}
-        <h4>No similar projects.</h4>
-    {% endfor %}
+            {% if request.user != project.user %}
+            <div class="card p-1 col-4 shadow">
+                <img src="{{ project.images.url }}" />
+                <div class="d-flex justify-content-between">
+                    <h5>{{ project.title }} | {{ project.category }}</h5>
+                    <div class="dropdown">
+                    <a class="link-dark text-decoration-none fw-bolder m-1" href="" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">. . .</a>
+                    <ul class="dropdown-menu rounded-3 shadow-lg" aria-labelledby="dropdownMenuButton1">
+                        <li><a class="dropdown-item" href="{% url 'projects:make_donation' project.pk %}">Donate</a></li>
+                        <li><a class="dropdown-item" href="{% url 'accounts:profile' project.user.pk %}">Owner profile</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#">Report</a></li>
+                    </ul>
+                    </div>
+                </div>
+                <div>
+                    {% for tag in project.tags.all %}
+                    <button
+                    type="button"
+                    class="btn btn-outline-primary btn-sm"
+                    disabled
+                    >
+                    {{ tag }}
+                    </button>
+                    {% endfor %}
+                </div>
+                <hp>{{ project.get_details }}... <a class="link-dark" href="{% url 'projects:project_details' project.pk %}">see more</a></hp>
+                </div>
+            {% endif %}
+        {% empty %}
+            <h4>No similar projects.</h4>
+        {% endfor %}
     </div>
 </div>
 

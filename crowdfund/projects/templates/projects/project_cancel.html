@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+<!-- page title -->
+{% block title %} Cancel this fund {% endblock %}
+
+<!-- page nav -->
+{% block navbar %} {% include 'navbar.html' %} {% endblock %}
+
+<!-- page content -->
+{% block content %}
+<div class="row">
+  <div class="col-2"></div>
+    <div class="col-8">
+      <div class="card mt-5 shadow">
+        <div class="card-body">
+          <div class="card-title py-3">
+            {% if request.user.pk == object.user.pk %}
+                <h2>Abort Fund</h2>
+                {% if object.can_cancel %}
+                    </div>
+                        <form action="{% url 'projects:project_cancel' object.pk %}" method="post" novalidate>
+                        {% csrf_token %}
+                        <p class="alert alert-danger" role="alert">
+                            Are you sure you want to cancel this project
+                        </p>
+                        <input class=" btn btn-danger m-4 col-2 p-2" type="submit" value="Confirm">
+                        </form>
+                    </div>
+                {% else %}
+                    <p class="alert alert-info" role="alert">
+                        Can't cancel this project <br>
+                        - current fund has exceeded 25% of the target
+                    </p>
+                    <a href="{% url 'projects:project_details' object.pk %}" class=" btn btn-secondary m-4 col-2 p-2">Back to project</a>
+                {% endif %}
+            {% else %}
+                <h3 class="alert-danger danger p-5">action not allowed</h3>
+            {% endif %}
+        </div>
+      </div>
+    </div>
+  <div class="col-2"></div>
+</div>
+{% endblock content %}
