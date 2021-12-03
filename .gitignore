@@ -108,7 +108,5 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-#db file
-db.sqlite3
 
 # End of https://www.gitignore.io/api/python
