@@ -10,7 +10,9 @@
 {% block content %}
 <div class="container d-flex justify-content-center">
     <div class="card p-3 m-2 col-6 shadow">
-        <img src="{{ project.images.url }}" />
+        {% for image in project.image_set.all%}
+            <img src="{{ image.image.url }}" />
+        {% endfor %}
         <div class="d-flex justify-content-between">
             <h3>{{ project.title }} | {{ project.category }}</h3>
             <div class="dropdown">
@@ -103,6 +105,38 @@
                 </div>
                 <small class="text-muted mb-1">{{ comment.created }}</small>
                 <p class="mb-1">{{ comment.comment }}</p>
+              
+                {% if comment.rate == '5' %}
+                <i class="fa fa-star checked " style="float: left;"></i>
+                <i class="fa fa-star  checked }" style="float: left;"></i>
+                <i class="fa fa-star checked  " style="float: left;"></i>
+                <i class="fa fa-star checked " style="float: left;"></i>
+                <i class="fa fa-star  checked " style="float: left;"></i>
+                {% elif comment.rate == '4' %}
+                <i class="fa fa-star checked " style="float: left;"></i>
+                <i class="fa fa-star  checked }" style="float: left;"></i>
+                <i class="fa fa-star  checked " style="float: left;"></i>
+                <i class="fa fa-star  checked" style="float: left;"></i>
+                <i class="fa fa-star   " style="float: left;"></i>
+                {% elif comment.rate == '3' %}
+                <i class="fa fa-star checked " style="float: left;"></i>
+                <i class="fa fa-star  checked }" style="float: left;"></i>
+                <i class="fa fa-star  checked " style="float: left;"></i>
+                <i class="fa fa-star" style="float: left;"></i>
+                <i class="fa fa-star" style="float: left;"></i>
+                {% elif comment.rate == '2' %}
+                <i class="fa fa-star checked " style="float: left;"></i>
+                <i class="fa fa-star  checked }" style="float: left;"></i>
+                <i class="fa fa-star   " style="float: left;"></i>
+                <i class="fa fa-star  " style="float: left;"></i>
+                <i class="fa fa-star   " style="float: left;"></i>
+                {% elif comment.rate == '1' %}
+                <i class="fa fa-star checked " style="float: left;"></i>
+                <i class="fa fa-star   " style="float: left;"></i>
+                <i class="fa fa-star   " style="float: left;"></i>
+                <i class="fa fa-star  " style="float: left;"></i>
+                <i class="fa fa-star   " style="float: left;"></i>
+                {% endif %}
             </div>
             {% endfor %}
         </div>
@@ -146,5 +180,9 @@
         {% endfor %}
     </div>
 </div>
-
+<style>
+    .checked{
+    color: orange;
+  }
+  </style>
 {% endblock %}

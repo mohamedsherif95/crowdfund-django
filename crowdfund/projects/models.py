@@ -60,6 +60,18 @@ class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     comment = models.TextField()
+    CATEGORY_CHOICES = [
+        ('1', '1'),
+        ('2', '2'),
+        ('3', '3'),
+        ('4', '4'),
+        ('5', '5'),
+    ]
+    rate = models.CharField(
+        max_length=2,
+        choices=CATEGORY_CHOICES,
+        default='1',
+    )
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
