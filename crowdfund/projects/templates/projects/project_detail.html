@@ -30,8 +30,22 @@
                 <li><a class="dropdown-item" href="{% url 'projects:project_cancel' project.pk %}">cancel project</a></li>
                 {% else %}
                     <li><a class="dropdown-item" href="{% url 'accounts:profile' project.user.pk %}">owner profile</a></li>
+                    <li><a class="dropdown-item" href="{% url 'projects:project_rate' project.pk %}">Rate</a></li>
+                    <li><hr class="dropdown-divider"></li>
                     <li><a class="dropdown-item" href="#">report</a></li>
                 {% endif %}
+                <!-- {% if request.user in rating.user_set.all%}
+                        <li><a class="dropdown-item" href="{% url 'projects:make_donation' project.pk %}">Donate</a></li>
+                        <li><a class="dropdown-item" href="{% url 'accounts:profile' project.user.pk %}">Owner profile</a></li>
+                        <li><a class="dropdown-item" href="#">Report</a></li>
+                        {%else%}
+                        <li><a class="dropdown-item" href="{% url 'projects:make_donation' project.pk %}">Donate</a></li>
+                        <li><a class="dropdown-item" href="{% url 'accounts:profile' project.user.pk %}">Owner profile</a></li>
+                        <li><a class="dropdown-item" href="{% url 'projects:project_rate' project.pk %}">Rate</a></li>
+                        <li><a class="dropdown-item" href="#">Report</a></li>
+
+                        <li><hr class="dropdown-divider"></li>
+                        {% endif %} -->
               </ul>
             </div>
           </div>
@@ -52,6 +66,39 @@
         {% endfor %}
         
         <p><B>{{ project.details }}</B></p>
+        <div >
+        {% if avg > 4 %}
+        <i class="fa fa-star checked " style="float: left;"></i>
+        <i class="fa fa-star  checked }" style="float: left;"></i>
+        <i class="fa fa-star checked  " style="float: left;"></i>
+        <i class="fa fa-star checked " style="float: left;"></i>
+        <i class="fa fa-star  checked " style="float: left;"></i>
+        {% elif avg > 3 %}
+        <i class="fa fa-star checked " style="float: left;"></i>
+        <i class="fa fa-star  checked }" style="float: left;"></i>
+        <i class="fa fa-star  checked " style="float: left;"></i>
+        <i class="fa fa-star  checked" style="float: left;"></i>
+        <i class="fa fa-star   " style="float: left;"></i>
+        {% elif avg > 2 %}
+        <i class="fa fa-star checked " style="float: left;"></i>
+        <i class="fa fa-star  checked }" style="float: left;"></i>
+        <i class="fa fa-star  checked " style="float: left;"></i>
+        <i class="fa fa-star" style="float: left;"></i>
+        <i class="fa fa-star" style="float: left;"></i>
+        {% elif avg > 1 %}
+        <i class="fa fa-star checked " style="float: left;"></i>
+        <i class="fa fa-star  checked }" style="float: left;"></i>
+        <i class="fa fa-star   " style="float: left;"></i>
+        <i class="fa fa-star  " style="float: left;"></i>
+        <i class="fa fa-star   " style="float: left;"></i>
+        {% elif avg > 0 %}
+        <i class="fa fa-star checked " style="float: left;"></i>
+        <i class="fa fa-star   " style="float: left;"></i>
+        <i class="fa fa-star   " style="float: left;"></i>
+        <i class="fa fa-star  " style="float: left;"></i>
+        <i class="fa fa-star   " style="float: left;"></i>
+        {% endif %}
+    </div>
         <table class="table">
             <thead>
                 <tr>
@@ -119,37 +166,7 @@
                 <small class="text-muted mb-1">{{ comment.created }}</small>
                 <p class="mb-1">{{ comment.comment }}</p>
               
-                {% if comment.rate == '5' %}
-                <i class="fa fa-star checked " style="float: left;"></i>
-                <i class="fa fa-star  checked }" style="float: left;"></i>
-                <i class="fa fa-star checked  " style="float: left;"></i>
-                <i class="fa fa-star checked " style="float: left;"></i>
-                <i class="fa fa-star  checked " style="float: left;"></i>
-                {% elif comment.rate == '4' %}
-                <i class="fa fa-star checked " style="float: left;"></i>
-                <i class="fa fa-star  checked }" style="float: left;"></i>
-                <i class="fa fa-star  checked " style="float: left;"></i>
-                <i class="fa fa-star  checked" style="float: left;"></i>
-                <i class="fa fa-star   " style="float: left;"></i>
-                {% elif comment.rate == '3' %}
-                <i class="fa fa-star checked " style="float: left;"></i>
-                <i class="fa fa-star  checked }" style="float: left;"></i>
-                <i class="fa fa-star  checked " style="float: left;"></i>
-                <i class="fa fa-star" style="float: left;"></i>
-                <i class="fa fa-star" style="float: left;"></i>
-                {% elif comment.rate == '2' %}
-                <i class="fa fa-star checked " style="float: left;"></i>
-                <i class="fa fa-star  checked }" style="float: left;"></i>
-                <i class="fa fa-star   " style="float: left;"></i>
-                <i class="fa fa-star  " style="float: left;"></i>
-                <i class="fa fa-star   " style="float: left;"></i>
-                {% elif comment.rate == '1' %}
-                <i class="fa fa-star checked " style="float: left;"></i>
-                <i class="fa fa-star   " style="float: left;"></i>
-                <i class="fa fa-star   " style="float: left;"></i>
-                <i class="fa fa-star  " style="float: left;"></i>
-                <i class="fa fa-star   " style="float: left;"></i>
-                {% endif %}
+               
             </div>
             {% endfor %}
         </div>
@@ -167,10 +184,20 @@
                     <div class="dropdown">
                     <a class="link-dark text-decoration-none fw-bolder m-1" href="" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">. . .</a>
                     <ul class="dropdown-menu rounded-3 shadow-lg" aria-labelledby="dropdownMenuButton1">
+
+                        {% if user.pk in rating.user_set.all%}
                         <li><a class="dropdown-item" href="{% url 'projects:make_donation' project.pk %}">Donate</a></li>
                         <li><a class="dropdown-item" href="{% url 'accounts:profile' project.user.pk %}">Owner profile</a></li>
-                        <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="#">Report</a></li>
+                        {%else%}
+                        <li><a class="dropdown-item" href="{% url 'projects:make_donation' project.pk %}">Donate</a></li>
+                        <li><a class="dropdown-item" href="{% url 'accounts:profile' project.user.pk %}">Owner profile</a></li>
+                        <li><a class="dropdown-item" href="{% url 'projects:project_rate' project.pk %}">Rate</a></li>
+                        <li><a class="dropdown-item" href="#">Report</a></li>
+
+                        <li><hr class="dropdown-divider"></li>
+                        {% endif %}
+                        
                     </ul>
                     </div>
                 </div>

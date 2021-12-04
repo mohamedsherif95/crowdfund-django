@@ -36,6 +36,7 @@
                     {% else %}
                       <li><a class="dropdown-item" href="{% url 'projects:make_donation' project.pk %}">Donate</a></li>
                       <li><a class="dropdown-item" href="{% url 'accounts:profile' project.user.pk %}">Owner profile</a></li>
+                      <li><a class="dropdown-item" href="{% url 'projects:project_rate' project.pk %}">Rate</a></li>
                       <li><hr class="dropdown-divider"></li>
                       <li><a class="dropdown-item" href="#">Report</a></li>
                     {% endif %}

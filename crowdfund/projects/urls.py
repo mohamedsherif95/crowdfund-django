@@ -13,4 +13,6 @@ urlpatterns = [
     path('project_details/<int:pk>/cancel', views.ProjectCancel.as_view(), name='project_cancel'),
     path('project_details/<int:pk>/donate/', views.MakeDonation.as_view(), name='make_donation'),
     path('search_projects/', views.ProjectSearch.as_view(), name='search_projects'),
+    path('project_rate/<int:pk>/', views.RatingView.as_view(), name='project_rate'),
+    
 ]
