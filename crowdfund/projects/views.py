@@ -1,10 +1,12 @@
 from django.views.generic import CreateView, ListView, DetailView, DeleteView
 from django.urls import reverse_lazy
-from .models import Comment, Donation, Project, Image
+from .models import Comment, Donation, Project, Image, ReportProject, ReportComment
 from .forms import AddProjectForm, MakeDonationForm
 from django.shortcuts import redirect, render
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.contrib import messages
+from datetime import datetime
+from django.contrib.auth.decorators import login_required, permission_required
 
 
 # Create your views here.
@@ -111,7 +113,6 @@ class LeaveComment(CreateView):
     template_name = 'projects/project_comment.html'
     fields = ['comment']
 
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         project_pk = self.kwargs['pk']
@@ -124,3 +125,52 @@ class LeaveComment(CreateView):
         obj.project = Project.objects.get(pk=self.kwargs['pk'])
         obj.save()
         return redirect('projects:project_details', self.kwargs['pk'])
+
+
+class ReportProject(CreateView): 
+    model = ReportProject
+    template_name = 'projects/project_report_form.html'
+    fields = ['category', 'report_message']  
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        project_pk = self.kwargs['pk']
+        context["project_pk"] = project_pk
+        return context
+    
+    def form_valid(self, form):
+        obj = form.save(commit=False)
+        obj.user = self.request.user
+        obj.project = Project.objects.get(pk=self.kwargs['pk'])
+        obj.save()
+        return redirect('projects:project_details', self.kwargs['pk'])
+
+
+class ReportComment(CreateView): 
+    model = ReportComment
+    template_name = 'projects/comment_report_form.html'
+    fields = ['category', 'report_message']  
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        comment = Comment.objects.get(pk=self.kwargs['pk'])
+        context["comment"] = comment
+        return context
+    
+    def form_valid(self, form):
+        obj = form.save(commit=False)
+        obj.user = self.request.user
+        obj.comment = Comment.objects.get(pk=self.kwargs['pk'])
+        obj.save()
+        return redirect('projects:home')
+
+
+# @permission_required('projects.view_report', raise_exception=True)
+# def reports(request):
+#     projects_reports = Project.objects.annotate(times_reported=Count('report')).filter(times_reported__gt=0).all()
+
+#     context = {
+#                'projects_reports' : projects_reports,
+#                }
+#     return render(request, 'projects/reports.html', context)
+

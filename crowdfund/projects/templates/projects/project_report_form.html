@@ -1,0 +1,34 @@
+{% extends 'base.html'%}
+
+
+<!-- page title -->
+{% block title %} Project Report {% endblock %}
+
+<!-- page nav -->
+{% block navbar %} {% include 'navbar.html' %} {% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-center">
+    <div class="card my-5 col-5 shadow">
+      <div class="card-body">
+        <div class="card-title py-3">
+          <h1>Report this project</h1>
+        </div>
+        <div>
+            <form method="post" action="{% url 'projects:report_project' project_pk %}" novalidate>
+                {% csrf_token %}
+                {% include 'includes/form.html'%}
+                <br>
+                <div class="d-flex justify-content-center" >
+                
+                <input class="btn btn-danger ms-1" type="submit" value="Report">
+                <a href="{% url 'projects:project_details' project_pk %}" class="btn btn-primary ms-5" type="submit">Cansel</a>
+             
+                </div>
+            </form>
+        </div>
+      </div>
+    </div>
+  </div>
+    
+{% endblock %}

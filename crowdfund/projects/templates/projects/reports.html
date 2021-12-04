@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+<!-- page title -->
+{% block title %} Reports {% endblock %}
+
+<!-- page nav -->
+{% block navbar %} {% include 'navbar.html' %} {% endblock %}
+
+<!-- page content -->
+{% block content %}
+{% for project in reports %}
+<article class="media">
+    <div class="media-content">
+      <div class="content">
+        <p>
+          <strong>{{ project.user.first_name }} {{ project.user.last_name }}</strong> 
+          <br>
+          {{ project.text }} - Times reported: {{ project.times_reported }}
+        </p> 
+      </div>
+    </div>
+</article>
+{% endfor %}
+
+{% endblock %}

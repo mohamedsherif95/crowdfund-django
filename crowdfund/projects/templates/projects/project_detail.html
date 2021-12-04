@@ -96,7 +96,7 @@
                             {% else %}
                               <li><a class="dropdown-item" href="#">reply</a></li>
                               <li><hr class="dropdown-divider"></li>
-                              <li><a class="dropdown-item" href="#">report</a></li>
+                              <li><a class="dropdown-item" href=""{% url 'projects:report_comment' comment.pk %}"">report</a></li>
                             {% endif %}
                         </ul>
                     </div>
@@ -123,7 +123,7 @@
                         <li><a class="dropdown-item" href="{% url 'projects:make_donation' project.pk %}">Donate</a></li>
                         <li><a class="dropdown-item" href="{% url 'accounts:profile' project.user.pk %}">Owner profile</a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="#">Report</a></li>
+                        <li><a class="dropdown-item" href="{% url 'projects:report_project' project.project_id %}">Report</a></li>
                     </ul>
                     </div>
                 </div>
