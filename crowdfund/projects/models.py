@@ -57,3 +57,41 @@ class Comment(models.Model):
         return f"user: {self.user.username}, project: {self.project.title}"
 
     
+class ReportProject(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    REPORT_CHOICES = [
+        ('hm', 'Harmful'),
+        ('fk', 'Fake'),
+        ('il', 'Illegale'),
+        ('ab', 'Abuse'),
+    ]
+    category = models.CharField(
+        max_length=2,
+        choices=REPORT_CHOICES,
+        default='fk',
+    )
+    report_message = models.TextField()    
+    
+    def __str__(self):
+        return f"Report from user: {self.user.username},on project: {self.project.title}"
+    
+    
+class ReportComment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE)
+    REPORT_CHOICES = [
+        ('hm', 'Harmful'),
+        ('fk', 'Fake'),
+        ('il', 'Illegale'),
+        ('ab', 'Abuse'),
+    ]
+    category = models.CharField(
+        max_length=2,
+        choices=REPORT_CHOICES,
+        default='fk',
+    )
+    report_message = models.TextField()
+    
+    def __str__(self):
+        return f"Report from user: {self.user.username},on comment: {self.comment}"    
