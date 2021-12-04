@@ -10,11 +10,19 @@
 {% block content %}
 <div class="container d-flex justify-content-center">
     <div class="card p-3 m-2 col-6 shadow">
-        {% for image in project.image_set.all%}
-            <img src="{{ image.image.url }}" />
-        {% endfor %}
+
         <div class="d-flex justify-content-between">
-            <h3>{{ project.title }} | {{ project.category }}</h3>
+            <h3>{{ project.title }} | 
+                {% if project.category == "PO"%}
+                Political
+                {%elif project.category == 'SC'%}
+                Social
+                {%elif project.category == 'SP'%}
+                Sports
+                {%else%}
+                Educational
+                {% endif %}
+            </h3>
             <div class="dropdown">
               <a class="link-dark text-decoration-none fw-bolder m-1" href="" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">. . .</a>
               <ul class="dropdown-menu rounded-3 shadow-lg" aria-labelledby="dropdownMenuButton1">
@@ -38,7 +46,12 @@
             </button>
             {% endfor %}
           </div>
-        <p>{{ project.details }}</p>
+          <br>
+        {% for image in images%}
+            <img src="{{ image.image.url }}" />
+        {% endfor %}
+        
+        <p><B>{{ project.details }}</B></p>
         <table class="table">
             <thead>
                 <tr>
