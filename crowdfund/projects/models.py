@@ -39,6 +39,18 @@ class Project(models.Model):
     def target_reached(self):
         return self.current == self.total_target
 
+    def avg_rate(self):
+        ratings = Rating.objects.filter(project=self)
+        total=0
+        for rating in ratings:
+            total = total+int(rating.rate)
+        if total == 0:
+            avg = 0
+        else:
+            avg = total/ratings.count()
+        return avg
+
+
 class Image(models.Model):
     project = models.ForeignKey(Project, default=None, on_delete=models.CASCADE, blank=True, null=True)
     image = models.ImageField( blank=True, null=True)

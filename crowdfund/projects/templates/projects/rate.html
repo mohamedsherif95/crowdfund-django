@@ -12,7 +12,15 @@
   <div class="card my-5 col-5 shadow">
     <div class="card-body">
       <div class="card-title py-3">
-        <h1>Rate This Project</h1>
+        {% if messages %}
+          <div class="mt-2">
+              {% for message in messages %}
+              <div class="alert alert-danger">{{ message }}</div>
+              {% endfor %}
+          </div>
+        {% else %}
+          <h1>Rate This Project</h1>
+        {% endif %}
       </div>
       <div>
         <form
@@ -27,12 +35,14 @@
 
            {% include 'includes/form.html' %} 
            
+           <div class="col-12 text-center">
             <input
               type="submit"
               name="sumbit"
               class="my-2 btn btn-success col-4 p-2"
               value="Rate"
             />
+            <div class="text-center"></div>
         </form>
       </div>
     </div>
