@@ -22,9 +22,6 @@ def index(request):
         # 'top_rated': top_rated,
         'top_featured': top_featured,
     }
-    print(context['top_featured'])
-    print(context['top_featured'][0].category)
-    print(context['top_featured'][1].category)
     return render(request, 'projects/home.html', context)
 
 

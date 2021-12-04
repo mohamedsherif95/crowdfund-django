@@ -12,6 +12,7 @@
 <div class="container-fluid">
   <div id="top-rated" class="row my-3" >
     <h3>Top Rated Projects</h3>
+    {% if top_latest|length >= 5 %}
     <div class="col-1"></div>
     <div id="top-rated-carousel" class="carousel slide col-10" data-bs-ride="carousel">
       <div class="carousel-indicators">
@@ -68,9 +69,12 @@
       </button>
     </div>
     <div class="col-1"></div>
+    {% endif %}
+    
   </div>
   <div id="top-latest" class="row">
     <h3>Latest Projects</h3>
+    {% if top_latest|length >= 5%}
     <div class="col-1"></div>
     <div id="top-latest-carousel" class="carousel slide col-10" data-bs-ride="carousel">
       <div class="carousel-indicators">
@@ -127,10 +131,13 @@
       </button>
     </div>
     <div class="col-1"></div>
+    {% endif %}
+    
   </div>
   <div id="top-featured" class="row">
     <h3>Top Featured</h3>
-<div class="col-1"></div>
+    {% if top_featured|length >= 5%}
+    <div class="col-1"></div>
     <div id="top-featured-carousel" class="carousel slide col-10" data-bs-ride="carousel">
       <div class="carousel-indicators">
         <button type="button" data-bs-target="#top-featured-carousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
@@ -186,5 +193,7 @@
       </button>
     </div>
     <div class="col-1"></div>
+    {% endif %}
+  
   </div>
 {% endblock %}
