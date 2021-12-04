@@ -10,54 +10,20 @@
 <!-- page content -->
 {% block content %}
 <div class="container-fluid">
-  <div id="top-rated" class="row my-3" >
-    <h3>Top Rated Projects</h3>
-    {% if top_latest|length >= 5 %}
-    <div class="col-1"></div>
-    <div id="top-rated-carousel" class="carousel slide col-10" data-bs-ride="carousel">
-      <div class="carousel-indicators">
-        <button type="button" data-bs-target="#top-rated-carousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-        <button type="button" data-bs-target="#top-rated-carousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
-        <button type="button" data-bs-target="#top-rated-carousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
-        <button type="button" data-bs-target="#top-rated-carousel" data-bs-slide-to="3" aria-label="Slide 4"></button>
-        <button type="button" data-bs-target="#top-rated-carousel" data-bs-slide-to="4" aria-label="Slide 5"></button>
-      </div>
-      <div class="carousel-inner">
-        <div class="carousel-item active">
-          <a class="d-flex justify-content-center" href="{% url 'projects:project_details' top_latest.0.pk %}"><img src="{{ top_latest.0.images.url }}" class="d-block w-50"  alt="{{ top_latest.0.title }}"></a>
-          <div class="carousel-caption fw-bold d-none d-md-block">
-            <h5>{{ top_latest.0.title }} | {{ top_latest.0.category }}</h5>
-            <p>{{ top_latest.0.details }}</p>
+  <div class="row mt-1" id="top-rated-projects">
+    <div id="top-rated-carousel" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-inner bg-dark text-center">
+        <h4 class="text-light">Top Rated Projects</h4>
+          {% for project in top_rated %}
+          <div class="carousel-item  {% if forloop.counter0 == 0 %}active{% endif %}">
+            <a class="d-flex justify-content-center " href="{% url 'projects:project_details' project.pk %}">
+            <img src="{{project.images.url}}" class="testi-overly d-block w-50 mh-50" alt="sliderImg"></a>
+              <div class="carousel-caption d-none d-md-block">
+                  <h1 class="fw-light">{{project.title}}</h1>
+                  <h5 class="fw-light">{{project.category}} | <span>{{ project.avg_rate }}/5</span></h5>
+              </div>
           </div>
-        </div>
-        <div class="carousel-item">
-          <a class="d-flex justify-content-center" href="{% url 'projects:project_details' top_latest.1.pk %}"><img src="{{ top_latest.1.images.url }}" class="d-block w-50" alt="{{ top_latest.1.title }}"></a>
-          <div class="carousel-caption fw-bold d-none d-md-block">
-            <h5>{{ top_latest.1.title }} | {{ top_latest.1.category }}</h5>
-            <p>{{ top_latest.1.details }}</p>
-          </div>
-        </div>
-        <div class="carousel-item">
-          <a class="d-flex justify-content-center" href="{% url 'projects:project_details' top_latest.2.pk %}"><img src="{{ top_latest.2.images.url }}" class="d-block w-50" alt="{{ top_latest.2.title }}"></a>
-          <div class="carousel-caption fw-bold d-none d-md-block">
-            <h5>{{ top_latest.2.title }} | {{ top_latest.2.category }}</h5>
-            <p>{{ top_latest.2.details }}</p>
-          </div>
-        </div>
-        <div class="carousel-item">
-          <a class="d-flex justify-content-center" href="{% url 'projects:project_details' top_latest.3.pk %}"><img src="{{ top_latest.3.images.url }}" class="d-block w-50" alt="{{ top_latest.3.title }}"></a>
-          <div class="carousel-caption fw-bold d-none d-md-block">
-            <h5>{{ top_latest.3.title }} | {{ top_latest.3.category }}</h5>
-            <p>{{ top_latest.3.details }}</p>
-          </div>
-        </div>
-        <div class="carousel-item">
-          <a class="d-flex justify-content-center" href="{% url 'projects:project_details' top_latest.4.pk %}"><img src="{{ top_latest.4.images.url }}" class="d-block w-50" alt="{{ top_latest.4.title }}"></a>
-          <div class="carousel-caption fw-bold d-none d-md-block">
-            <h5>{{ top_latest.4.title }} | {{ top_latest.4.category }}</h5>
-            <p>{{ top_latest.4.details }}</p>
-          </div>
-        </div>
+          {% endfor %}
       </div>
       <button class="carousel-control-prev" type="button" data-bs-target="#top-rated-carousel" data-bs-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -67,133 +33,68 @@
         <span class="carousel-control-next-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Next</span>
       </button>
-    </div>
-    <div class="col-1"></div>
-    {% endif %}
-    
   </div>
-  <div id="top-latest" class="row">
-    <h3>Latest Projects</h3>
-    {% if top_latest|length >= 5%}
-    <div class="col-1"></div>
-    <div id="top-latest-carousel" class="carousel slide col-10" data-bs-ride="carousel">
-      <div class="carousel-indicators">
-        <button type="button" data-bs-target="#top-latest-carousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-        <button type="button" data-bs-target="#top-latest-carousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
-        <button type="button" data-bs-target="#top-latest-carousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
-        <button type="button" data-bs-target="#top-latest-carousel" data-bs-slide-to="3" aria-label="Slide 4"></button>
-        <button type="button" data-bs-target="#top-latest-carousel" data-bs-slide-to="4" aria-label="Slide 5"></button>
+  </div>
+  <div class="row" id="latest-projects">
+    <div id="latest-carousel" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-inner bg-dark text-center">
+        <h4 class="text-light">Latest Projects</h4>
+          {% for project in top_latest %}
+          <div class="carousel-item  {% if forloop.counter0 == 0 %}active{% endif %}">
+            <a class="d-flex justify-content-center " href="{% url 'projects:project_details' project.pk %}">
+            <img src="{{project.images.url}}" class="testi-overly d-block w-50 mh-50" alt="sliderImg"></a>
+              <div class="carousel-caption d-none d-md-block">
+                <h1 class="fw-light">{{project.title}}</h1>
+                <h5 class="fw-light">{{project.category}} | <span>{{ project.avg_rate }}/5</span></h5>
+              </div>
+          </div>
+          {% endfor %}
       </div>
-      <div class="carousel-inner">
-        <div class="carousel-item active">
-          <a class="d-flex justify-content-center" href="{% url 'projects:project_details' top_latest.0.pk %}"><img src="{{ top_latest.0.images.url }}" class="d-block w-50" alt="{{ top_latest.0.title }}"></a>
-          <div class="carousel-caption fw-bold d-none d-md-block">
-            <h5>{{ top_latest.0.title }} | {{ top_latest.0.category }}</h5>
-            <p>{{ top_latest.0.details }}</p>
-          </div>
-        </div>
-        <div class="carousel-item">
-          <a class="d-flex justify-content-center" href="{% url 'projects:project_details' top_latest.1.pk %}"><img src="{{ top_latest.1.images.url }}" class="d-block w-50" alt="{{ top_latest.1.title }}"></a>
-          <div class="carousel-caption fw-bold d-none d-md-block">
-            <h5>{{ top_latest.1.title }} | {{ top_latest.1.category }}</h5>
-            <p>{{ top_latest.1.details }}</p>
-          </div>
-        </div>
-        <div class="carousel-item">
-          <a class="d-flex justify-content-center" href="{% url 'projects:project_details' top_latest.2.pk %}"><img src="{{ top_latest.2.images.url }}" class="d-block w-50" alt="{{ top_latest.2.title }}"></a>
-          <div class="carousel-caption fw-bold d-none d-md-block">
-            <h5>{{ top_latest.2.title }} | {{ top_latest.2.category }}</h5>
-            <p>{{ top_latest.2.details }}</p>
-          </div>
-        </div>
-        <div class="carousel-item">
-          <a class="d-flex justify-content-center" href="{% url 'projects:project_details' top_latest.3.pk %}"><img src="{{ top_latest.3.images.url }}" class="d-block w-50" alt="{{ top_latest.3.title }}"></a>
-          <div class="carousel-caption fw-bold d-none d-md-block">
-            <h5>{{ top_latest.3.title }} | {{ top_latest.3.category }}</h5>
-            <p>{{ top_latest.3.details }}</p>
-          </div>
-        </div>
-        <div class="carousel-item">
-          <a class="d-flex justify-content-center" href="{% url 'projects:project_details' top_latest.4.pk %}"><img src="{{ top_latest.4.images.url }}" class="d-block w-50" alt="{{ top_latest.4.title }}"></a>
-          <div class="carousel-caption fw-bold d-none d-md-block">
-            <h5>{{ top_latest.4.title }} | {{ top_latest.4.category }}</h5>
-            <p>{{ top_latest.4.details }}</p>
-          </div>
-        </div>
-      </div>
-      <button class="carousel-control-prev" type="button" data-bs-target="#top-latest-carousel" data-bs-slide="prev">
+      <button class="carousel-control-prev" type="button" data-bs-target="#latest-carousel" data-bs-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Previous</span>
       </button>
-      <button class="carousel-control-next" type="button" data-bs-target="#top-latest-carousel" data-bs-slide="next">
+      <button class="carousel-control-next" type="button" data-bs-target="#latest-carousel" data-bs-slide="next">
         <span class="carousel-control-next-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Next</span>
       </button>
-    </div>
-    <div class="col-1"></div>
-    {% endif %}
-    
   </div>
-  <div id="top-featured" class="row">
-    <h3>Top Featured</h3>
-    {% if top_featured|length >= 5%}
-    <div class="col-1"></div>
-    <div id="top-featured-carousel" class="carousel slide col-10" data-bs-ride="carousel">
-      <div class="carousel-indicators">
-        <button type="button" data-bs-target="#top-featured-carousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-        <button type="button" data-bs-target="#top-featured-carousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
-        <button type="button" data-bs-target="#top-featured-carousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
-        <button type="button" data-bs-target="#top-featured-carousel" data-bs-slide-to="3" aria-label="Slide 4"></button>
-        <button type="button" data-bs-target="#top-featured-carousel" data-bs-slide-to="4" aria-label="Slide 5"></button>
+  </div>
+  <div class="row mb-1" id="featured-projects">
+    <div id="featured-carousel" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-inner bg-dark text-center">
+        <h4 class="text-light">Featured Projects</h4>
+          {% for project in top_featured %}
+          <div class="carousel-item  {% if forloop.counter0 == 0 %}active{% endif %}">
+            <a class="d-flex justify-content-center " href="{% url 'projects:project_details' project.pk %}">
+            <img src="{{project.images.url}}" class="testi-overly d-block w-50 mh-50" alt="sliderImg"></a>
+              <div class="carousel-caption d-none d-md-block">
+                <h1 class="fw-light">{{project.title}}</h1>
+                <h5 class="fw-light">{{project.category}} | <span>{{ project.avg_rate }}/5</span></h5>
+              </div>
+          </div>
+          {% endfor %}
       </div>
-      <div class="carousel-inner">
-        <div class="carousel-item active">
-          <a class="d-flex justify-content-center" href="{% url 'projects:project_details' top_featured.0.pk %}"><img src="{{ top_featured.0.images.url }}" class="d-block w-50" alt="{{ top_featured.0.title }}"></a>
-          <div class="carousel-caption fw-bold d-none d-md-block">
-            <h5>{{ top_featured.0.title }} | {{ top_featured.0.category }}</h5>
-            <p>{{ top_featured.0.details }}</p>
-          </div>
-        </div>
-        <div class="carousel-item">
-          <a class="d-flex justify-content-center" href="{% url 'projects:project_details' top_featured.1.pk %}"><img src="{{ top_featured.1.images.url }}" class="d-block w-50" alt="{{ top_featured.1.title }}"></a>
-          <div class="carousel-caption fw-bold d-none d-md-block">
-            <h5>{{ top_featured.1.title }} | {{ top_featured.1.category }}</h5>
-            <p>{{ top_featured.1.details }}</p>
-          </div>
-        </div>
-        <div class="carousel-item">
-          <a class="d-flex justify-content-center" href="{% url 'projects:project_details' top_featured.2.pk %}"><img src="{{ top_featured.2.images.url }}" class="d-block w-50" alt="{{ top_featured.2.title }}"></a>
-          <div class="carousel-caption fw-bold d-none d-md-block">
-            <h5>{{ top_featured.2.title }} | {{ top_featured.2.category }}</h5>
-            <p>{{ top_featured.2.details }}</p>
-          </div>
-        </div>
-        <div class="carousel-item">
-          <a class="d-flex justify-content-center" href="{% url 'projects:project_details' top_featured.3.pk %}"><img src="{{ top_featured.3.images.url }}" class="d-block w-50" alt="{{ top_featured.3.title }}"></a>
-          <div class="carousel-caption fw-bold d-none d-md-block">
-            <h5>{{ top_featured.3.title }} | {{ top_featured.3.category }}</h5>
-            <p>{{ top_featured.3.details }}</p>
-          </div>
-        </div>
-        <div class="carousel-item">
-          <a class="d-flex justify-content-center" href="{% url 'projects:project_details' top_featured.4.pk %}"><img src="{{ top_featured.4.images.url }}" class="d-block w-50" alt="{{ top_featured.4.title }}"></a>
-          <div class="carousel-caption fw-bold d-none d-md-block">
-            <h5>{{ top_featured.4.title }} | {{ top_featured.4.category }}</h5>
-            <p>{{ top_featured.4.details }}</p>
-          </div>
-        </div>
-      </div>
-      <button class="carousel-control-prev" type="button" data-bs-target="#top-featured-carousel" data-bs-slide="prev">
+      <button class="carousel-control-prev" type="button" data-bs-target="#featured-carousel" data-bs-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Previous</span>
       </button>
-      <button class="carousel-control-next" type="button" data-bs-target="#top-featured-carousel" data-bs-slide="next">
+      <button class="carousel-control-next" type="button" data-bs-target="#featured-carousel" data-bs-slide="next">
         <span class="carousel-control-next-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Next</span>
       </button>
-    </div>
-    <div class="col-1"></div>
-    {% endif %}
-  
+  </div>
   </div>
 {% endblock %}
+      {% comment %} <div class="carousel-indicators">
+          <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active"
+              aria-current="true" aria-label="Slide 1"></button>
+          <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1"
+              aria-label="Slide 2"></button>
+          <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2"
+              aria-label="Slide 3"></button>
+          <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="3"
+              aria-label="Slide 4"></button>
+          <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="4"
+              aria-label="Slide 5"></button>
+      </div> {% endcomment %}

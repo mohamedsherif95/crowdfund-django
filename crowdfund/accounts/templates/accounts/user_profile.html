@@ -29,7 +29,7 @@
                 {{ user.first_name }} {{ user.last_name }}
               </h4>
               <p class="small">
-                <i class="fa fa-map-marker mr-2"></i>{{ user.country.name }}
+                <i class="fa fa-map-marker mr-2"></i> {{ user.country.name }}
               </p>
             </div>
           </div>
@@ -49,16 +49,14 @@
             <h5 class="text-light font-weight-bold mb-0 d-block">
               {{ user.project_set.count }}
             </h5>
-            <small class="text-muted">
-              <i class="fa fa-picture-o mr-1"></i>Projects</small
+            <small class="text-muted">Projects</small
             >
           </li>
           <li class="list-inline-item">
             <h5 class="text-light font-weight-bold mb-0 d-block">
               {{ user.donation_set.count }}
             </h5>
-            <small class="text-muted">
-              <i class="fa fa-user-circle-o mr-1"></i>Donations</small
+            <small class="text-muted">Donations</small
             >
           </li>
         </ul>

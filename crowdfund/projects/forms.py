@@ -15,7 +15,7 @@ class AddProjectForm(forms.ModelForm):
     class Meta:
         model = Project
         fields = '__all__'
-        exclude = ('user',)
+        exclude = ('user', 'current', 'is_featured', 'avg_rate')
 
 
 class MakeDonationForm(forms.ModelForm):

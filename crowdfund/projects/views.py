@@ -14,13 +14,13 @@ from django.contrib.auth.decorators import login_required, permission_required
 
 # Create your views here.
 def index(request):
-    # top_rated = Project.objects.order_by('-rating')[:5]
+    top_rated = Project.objects.order_by('-avg_rate')[:5]
     top_featured = Project.objects.filter(is_featured=True).order_by('-start_time')[:5]
     top_latest = Project.objects.order_by('-start_time')[:5]
 
     context = {
         'top_latest': top_latest,
-        # 'top_rated': top_rated,
+        'top_rated': top_rated,
         'top_featured': top_featured,
     }
     return render(request, 'projects/home.html', context)
@@ -82,21 +82,11 @@ class ProjectDetails(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         project = Project.objects.get(pk=self.kwargs['pk'])
-        images = Image.objects.all().filter(project=project)
-        # rate = Rating.objects.filter(project=project)
-        # total=0
-        # for r in rate:
-        #     total = total+int(r.rate)
-        # if total == 0:
-        #     avg = 0
-        # else:
-        #     avg = total/len(rate)
-
         project_tags_ids = project.tags.values_list('id', flat=True)
         similar_projects = Project.objects.filter(tags__in=project_tags_ids).exclude(id=project.id).distinct()
         context["similar_projects"] = similar_projects
+        images = Image.objects.filter(project=project)
         context["images"] = images
-        # context['avg'] = avg
         return context
 
 

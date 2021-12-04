@@ -8,15 +8,15 @@ class Project(models.Model):
     title = models.CharField(max_length=250)
     details = models.TextField()
     CATEGORY_CHOICES = [
-        ('SC', 'Social'),
-        ('PO', 'Political'),
-        ('SP', 'Sports'),
-        ('ED', 'Educational'),
+        ('Social', 'Social'),
+        ('Political', 'Political'),
+        ('Sports', 'Sports'),
+        ('Educational', 'Educational'),
     ]
     category = models.CharField(
-        max_length=2,
+        max_length=11,
         choices=CATEGORY_CHOICES,
-        default='SC',
+        default='Social',
     )
     images = models.ImageField(_('Project Cover'),null=False, blank=False)
     total_target = models.PositiveIntegerField()
@@ -26,6 +26,7 @@ class Project(models.Model):
     end_time = models.DateTimeField()
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     is_featured = models.BooleanField(default=False)
+    avg_rate = models.FloatField(default=0)
 
     def __str__(self):
         return self.title
@@ -39,7 +40,7 @@ class Project(models.Model):
     def target_reached(self):
         return self.current == self.total_target
 
-    def avg_rate(self):
+    def calc_avg_rate(self):
         ratings = Rating.objects.filter(project=self)
         total=0
         for rating in ratings:
@@ -48,9 +49,13 @@ class Project(models.Model):
             avg = 0
         else:
             avg = total/ratings.count()
-        return avg
+        if avg % 1 == 0:
+            self.avg_rate = int(avg)
+            return int(avg)
+        self.avg_rate = round(avg, 1)
+        return round(avg, 1)
 
-
+    
 class Image(models.Model):
     project = models.ForeignKey(Project, default=None, on_delete=models.CASCADE, blank=True, null=True)
     image = models.ImageField( blank=True, null=True)
@@ -84,6 +89,9 @@ class Rating(models.Model):
         choices=CATEGORY_CHOICES,
         default='1',
     )
+
+    def __str__(self):
+        return f"{self.user.username} gave {self.project} {self.rate}/5"
 
 class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
