@@ -1,8 +1,9 @@
 
 from django.db import models
+from django.http.response import HttpResponse
 from django.views.generic import CreateView, ListView, DetailView, DeleteView
 from django.urls import reverse_lazy
-from .models import Comment, Donation, Project, Image, ReportProject, ReportComment, Rating, Rating
+from .models import Comment, Donation, Project, Image, ReportProject, ReportComment, Rating
 from .forms import AddProjectForm, MakeDonationForm
 from django.shortcuts import redirect, render
 from django.db.models import Q, Count, fields
@@ -52,9 +53,19 @@ class ProjectSearch(ListView):
 
     def get_queryset(self):
         query = self.request.GET.get('q', '')
+        title = self.request.GET.get('title', '')
+        tags = self.request.GET.get('tags', '')
         queryset = self.model.objects.all()
         if query:
-            queryset = self.model.objects.filter(Q(title__icontains=query) | Q(details__icontains=query))
+            if title and not tags:
+                queryset = self.model.objects.filter(title__icontains=query)
+            elif tags and not title:
+                queryset = self.model.objects.filter(tags__name__icontains=query)
+            else:
+                queryset = self.model.objects.filter(
+                Q(title__icontains=query) | 
+                Q(tags__name__icontains=query) | 
+                Q(details__icontains=query))
         return queryset
 
 
@@ -72,21 +83,20 @@ class ProjectDetails(DetailView):
         context = super().get_context_data(**kwargs)
         project = Project.objects.get(pk=self.kwargs['pk'])
         images = Image.objects.all().filter(project=project)
-        rate = Rating.objects.filter(project=project)
-        print(rate)
-        total=0
-        for r in rate:
-            total = total+int(r.rate)
-        if total == 0:
-            avg = 0
-        else:
-            avg = total/len(rate)
-        print(total)
+        # rate = Rating.objects.filter(project=project)
+        # total=0
+        # for r in rate:
+        #     total = total+int(r.rate)
+        # if total == 0:
+        #     avg = 0
+        # else:
+        #     avg = total/len(rate)
+
         project_tags_ids = project.tags.values_list('id', flat=True)
         similar_projects = Project.objects.filter(tags__in=project_tags_ids).exclude(id=project.id).distinct()
         context["similar_projects"] = similar_projects
         context["images"] = images
-        context['avg'] = avg
+        # context['avg'] = avg
         return context
 
 
@@ -109,8 +119,13 @@ class RatingView(CreateView):
 
     def form_valid(self, form):
         obj = form.save(commit=False)
-        obj.user = self.request.user
-        obj.project = Project.objects.get(pk=self.kwargs['pk'])
+        user = self.request.user
+        project = Project.objects.get(pk=self.kwargs['pk'])
+        if Rating.objects.filter(user=user, project=project):
+            messages.error(self.request, 'You have already rated this project!')
+            return redirect('projects:project_rate', self.kwargs['pk'])
+        obj.user = user
+        obj.project = project
         obj.save()
         return redirect('projects:project_details',self.kwargs["pk"])
 # class DeleteComment(DeleteView):
