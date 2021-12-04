@@ -1,6 +1,6 @@
 from typing import ValuesView
 from django import forms 
-from .models import Project, Donation
+from .models import Project, Donation, ReportComment, ReportProject
 from django.forms.widgets import NumberInput
 from django.forms.models import inlineformset_factory
 
@@ -24,6 +24,11 @@ class MakeDonationForm(forms.ModelForm):
         fields = ['amount']
 
 
+class MakeReportForm(forms.ModelForm):
+    class Meta:
+        models = (ReportProject, ReportComment)
+        fields = ['category', 'report_message']
+        
 # class ImageForm(forms.ModelForm):
 
 #     image = forms.ImageField(label='Images')

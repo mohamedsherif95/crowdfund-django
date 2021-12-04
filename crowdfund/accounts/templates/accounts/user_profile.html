@@ -66,11 +66,7 @@
 
       <div class="py-4 px-4">
         <div class="d-flex align-items-center justify-content-between mb-3">
-          <h5 class="mb-0">Recent projects</h5>
-          <a
-            href="{% url 'projects:project_list' %}"
-            >Show all</a
-          >
+          <h5 class="mb-0">{{ user.first_name }}'s projects</h5>
         </div>
         <div class="row d-flex justify-content-center">
           {% for project in user.project_set.all %}
