@@ -1,9 +1,11 @@
+
+from django.db import models
 from django.views.generic import CreateView, ListView, DetailView, DeleteView
 from django.urls import reverse_lazy
-from .models import Comment, Donation, Project, Image, ReportProject, ReportComment
+from .models import Comment, Donation, Project, Image, ReportProject, ReportComment, Rating, Rating
 from .forms import AddProjectForm, MakeDonationForm
 from django.shortcuts import redirect, render
-from django.db.models import Q, Count
+from django.db.models import Q, Count, fields
 from django.contrib import messages
 from datetime import datetime
 from django.contrib.auth.decorators import login_required, permission_required
@@ -72,9 +74,22 @@ class ProjectDetails(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         project = Project.objects.get(pk=self.kwargs['pk'])
+        images = Image.objects.all().filter(project=project)
+        rate = Rating.objects.filter(project=project)
+        print(rate)
+        total=0
+        for r in rate:
+            total = total+int(r.rate)
+        if total == 0:
+            avg = 0
+        else:
+            avg = total/len(rate)
+        print(total)
         project_tags_ids = project.tags.values_list('id', flat=True)
         similar_projects = Project.objects.filter(tags__in=project_tags_ids).exclude(id=project.id).distinct()
         context["similar_projects"] = similar_projects
+        context["images"] = images
+        context['avg'] = avg
         return context
 
 
@@ -82,6 +97,34 @@ class ProjectCancel(DeleteView):
     model = Project
     template_name = 'projects/project_cancel.html'
     success_url = reverse_lazy('projects:home')
+
+
+class RatingView(CreateView):
+    model = Rating
+    template_name = 'projects/rate.html'
+    fields = ['rate']
+   
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        project = Project.objects.get(pk=self.kwargs['pk'])
+        context["project"] = project
+        return context
+
+    def form_valid(self, form):
+        obj = form.save(commit=False)
+        obj.user = self.request.user
+        obj.project = Project.objects.get(pk=self.kwargs['pk'])
+        obj.save()
+        return redirect('projects:project_details',self.kwargs["pk"])
+# class DeleteComment(DeleteView):
+#     model = Comment
+#     template_name = 'projects/delete_comment.html'
+
+#     def get_success_url(self):
+#         return reverse_lazy('accounts:profile', self.request.user.pk)
+
+#     def get(self, *args, **kwargs):
+#         return self.post(*args, **kwargs)
 
 
 class MakeDonation(CreateView):
@@ -111,7 +154,7 @@ class MakeDonation(CreateView):
 class LeaveComment(CreateView):
     model = Comment
     template_name = 'projects/project_comment.html'
-    fields = ['comment']
+    fields = ['comment','rate']
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

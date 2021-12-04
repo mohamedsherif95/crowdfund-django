@@ -10,9 +10,19 @@
 {% block content %}
 <div class="container d-flex justify-content-center">
     <div class="card p-3 m-2 col-6 shadow">
-        <img src="{{ project.images.url }}" />
+
         <div class="d-flex justify-content-between">
-            <h3>{{ project.title }} | {{ project.category }}</h3>
+            <h3>{{ project.title }} | 
+                {% if project.category == "PO"%}
+                Political
+                {%elif project.category == 'SC'%}
+                Social
+                {%elif project.category == 'SP'%}
+                Sports
+                {%else%}
+                Educational
+                {% endif %}
+            </h3>
             <div class="dropdown">
               <a class="link-dark text-decoration-none fw-bolder m-1" href="" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">. . .</a>
               <ul class="dropdown-menu rounded-3 shadow-lg" aria-labelledby="dropdownMenuButton1">
@@ -20,8 +30,22 @@
                 <li><a class="dropdown-item" href="{% url 'projects:project_cancel' project.pk %}">cancel project</a></li>
                 {% else %}
                     <li><a class="dropdown-item" href="{% url 'accounts:profile' project.user.pk %}">owner profile</a></li>
+                    <li><a class="dropdown-item" href="{% url 'projects:project_rate' project.pk %}">Rate</a></li>
+                    <li><hr class="dropdown-divider"></li>
                     <li><a class="dropdown-item" href="#">report</a></li>
                 {% endif %}
+                <!-- {% if request.user in rating.user_set.all%}
+                        <li><a class="dropdown-item" href="{% url 'projects:make_donation' project.pk %}">Donate</a></li>
+                        <li><a class="dropdown-item" href="{% url 'accounts:profile' project.user.pk %}">Owner profile</a></li>
+                        <li><a class="dropdown-item" href="#">Report</a></li>
+                        {%else%}
+                        <li><a class="dropdown-item" href="{% url 'projects:make_donation' project.pk %}">Donate</a></li>
+                        <li><a class="dropdown-item" href="{% url 'accounts:profile' project.user.pk %}">Owner profile</a></li>
+                        <li><a class="dropdown-item" href="{% url 'projects:project_rate' project.pk %}">Rate</a></li>
+                        <li><a class="dropdown-item" href="#">Report</a></li>
+
+                        <li><hr class="dropdown-divider"></li>
+                        {% endif %} -->
               </ul>
             </div>
           </div>
@@ -36,7 +60,45 @@
             </button>
             {% endfor %}
           </div>
-        <p>{{ project.details }}</p>
+          <br>
+        {% for image in images%}
+            <img src="{{ image.image.url }}" />
+        {% endfor %}
+        
+        <p><B>{{ project.details }}</B></p>
+        <div >
+        {% if avg > 4 %}
+        <i class="fa fa-star checked " style="float: left;"></i>
+        <i class="fa fa-star  checked }" style="float: left;"></i>
+        <i class="fa fa-star checked  " style="float: left;"></i>
+        <i class="fa fa-star checked " style="float: left;"></i>
+        <i class="fa fa-star  checked " style="float: left;"></i>
+        {% elif avg > 3 %}
+        <i class="fa fa-star checked " style="float: left;"></i>
+        <i class="fa fa-star  checked }" style="float: left;"></i>
+        <i class="fa fa-star  checked " style="float: left;"></i>
+        <i class="fa fa-star  checked" style="float: left;"></i>
+        <i class="fa fa-star   " style="float: left;"></i>
+        {% elif avg > 2 %}
+        <i class="fa fa-star checked " style="float: left;"></i>
+        <i class="fa fa-star  checked }" style="float: left;"></i>
+        <i class="fa fa-star  checked " style="float: left;"></i>
+        <i class="fa fa-star" style="float: left;"></i>
+        <i class="fa fa-star" style="float: left;"></i>
+        {% elif avg > 1 %}
+        <i class="fa fa-star checked " style="float: left;"></i>
+        <i class="fa fa-star  checked }" style="float: left;"></i>
+        <i class="fa fa-star   " style="float: left;"></i>
+        <i class="fa fa-star  " style="float: left;"></i>
+        <i class="fa fa-star   " style="float: left;"></i>
+        {% elif avg > 0 %}
+        <i class="fa fa-star checked " style="float: left;"></i>
+        <i class="fa fa-star   " style="float: left;"></i>
+        <i class="fa fa-star   " style="float: left;"></i>
+        <i class="fa fa-star  " style="float: left;"></i>
+        <i class="fa fa-star   " style="float: left;"></i>
+        {% endif %}
+    </div>
         <table class="table">
             <thead>
                 <tr>
@@ -103,6 +165,8 @@
                 </div>
                 <small class="text-muted mb-1">{{ comment.created }}</small>
                 <p class="mb-1">{{ comment.comment }}</p>
+              
+               
             </div>
             {% endfor %}
         </div>
@@ -120,10 +184,20 @@
                     <div class="dropdown">
                     <a class="link-dark text-decoration-none fw-bolder m-1" href="" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">. . .</a>
                     <ul class="dropdown-menu rounded-3 shadow-lg" aria-labelledby="dropdownMenuButton1">
+
+                        {% if user.pk in rating.user_set.all%}
                         <li><a class="dropdown-item" href="{% url 'projects:make_donation' project.pk %}">Donate</a></li>
                         <li><a class="dropdown-item" href="{% url 'accounts:profile' project.user.pk %}">Owner profile</a></li>
+                        <li><a class="dropdown-item" href="#">Report</a></li>
+                        {%else%}
+                        <li><a class="dropdown-item" href="{% url 'projects:make_donation' project.pk %}">Donate</a></li>
+                        <li><a class="dropdown-item" href="{% url 'accounts:profile' project.user.pk %}">Owner profile</a></li>
+                        <li><a class="dropdown-item" href="{% url 'projects:project_rate' project.pk %}">Rate</a></li>
+                        <li><a class="dropdown-item" href=""{% url 'projects:report_project' project.project_id %}"">Report</a></li>
+
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="{% url 'projects:report_project' project.project_id %}">Report</a></li>
+                        {% endif %}
+                        
                     </ul>
                     </div>
                 </div>
@@ -146,5 +220,9 @@
         {% endfor %}
     </div>
 </div>
-
+<style>
+    .checked{
+    color: orange;
+  }
+  </style>
 {% endblock %}

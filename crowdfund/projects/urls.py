@@ -15,4 +15,5 @@ urlpatterns = [
     # path('reports/', views.reports, name='reports'),
     path('report_project/<int:pk>', views.ReportProject.as_view(), name='report_project'),
     path('report_comment/<int:pk>', views.ReportComment.as_view(), name='report_comment'),
+    path('project_rate/<int:pk>/', views.RatingView.as_view(), name='project_rate'),
 ]
