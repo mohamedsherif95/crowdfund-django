@@ -12,5 +12,6 @@ def update_current(sender, instance, created, **kwargs):
 @receiver(post_save,sender=Rating)
 def update_avg_rate(sender, instance, created, **kwargs):
     if created:
+        instance.project.total_rates += int(instance.rate)
         instance.project.calc_avg_rate()
         instance.project.save()

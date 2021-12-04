@@ -83,7 +83,7 @@ class ProjectDetails(DetailView):
         context = super().get_context_data(**kwargs)
         project = Project.objects.get(pk=self.kwargs['pk'])
         project_tags_ids = project.tags.values_list('id', flat=True)
-        similar_projects = Project.objects.filter(tags__in=project_tags_ids).exclude(id=project.id).distinct()
+        similar_projects = Project.objects.filter(tags__in=project_tags_ids).exclude(id=project.id).distinct()[:5]
         context["similar_projects"] = similar_projects
         images = Image.objects.filter(project=project)
         context["images"] = images

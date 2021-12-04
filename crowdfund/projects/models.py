@@ -26,6 +26,7 @@ class Project(models.Model):
     end_time = models.DateTimeField()
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     is_featured = models.BooleanField(default=False)
+    total_rates = models.IntegerField(default=0)
     avg_rate = models.FloatField(default=0)
 
     def __str__(self):
@@ -41,21 +42,12 @@ class Project(models.Model):
         return self.current == self.total_target
 
     def calc_avg_rate(self):
-        ratings = Rating.objects.filter(project=self)
-        total=0
-        for rating in ratings:
-            total = total+int(rating.rate)
-        if total == 0:
-            avg = 0
-        else:
-            avg = total/ratings.count()
-        if avg % 1 == 0:
-            self.avg_rate = int(avg)
-            return int(avg)
-        self.avg_rate = round(avg, 1)
-        return round(avg, 1)
+        ratings = Rating.objects.filter(project=self).count()
+        print(ratings)
+        self.avg_rate = round(self.total_rates / ratings, 1)
+        return self.avg_rate
 
-    
+
 class Image(models.Model):
     project = models.ForeignKey(Project, default=None, on_delete=models.CASCADE, blank=True, null=True)
     image = models.ImageField( blank=True, null=True)
