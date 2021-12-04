@@ -114,7 +114,7 @@
                             {% else %}
                               <li><a class="dropdown-item" href="#">reply</a></li>
                               <li><hr class="dropdown-divider"></li>
-                              <li><a class="dropdown-item" href="#">report</a></li>
+                              <li><a class="dropdown-item" href="{% url 'projects:report_comment' comment.pk %}">report</a></li>
                             {% endif %}
                         </ul>
                     </div>

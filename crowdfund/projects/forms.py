@@ -24,10 +24,10 @@ class MakeDonationForm(forms.ModelForm):
         fields = ['amount']
 
 
-class MakeReportForm(forms.ModelForm):
-    class Meta:
-        models = (ReportProject, ReportComment)
-        fields = ['category', 'report_message']
+# class MakeReportForm(forms.ModelForm):
+#     class Meta:
+#         models = (ReportProject, ReportComment)
+#         fields = ['category', 'report_message']
         
 # class ImageForm(forms.ModelForm):
 
