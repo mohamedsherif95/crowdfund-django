@@ -1,16 +1,29 @@
-from django.views.generic import CreateView, ListView, DetailView
+from django.views.generic import CreateView, ListView, DetailView, DeleteView
+from django.urls import reverse_lazy
 from .models import Comment, Donation, Project, Image, ReportProject, ReportComment
-from .forms import AddProjectForm, MakeDonationForm, MakeReportForm
+from .forms import AddProjectForm, MakeDonationForm
 from django.shortcuts import redirect, render
-from django.db.models import Q
-from django.db.models import Count
+from django.db.models import Q, Count
+from django.contrib import messages
 from datetime import datetime
 from django.contrib.auth.decorators import login_required, permission_required
 
 
 # Create your views here.
 def index(request):
-    return render(request, 'projects/home.html')
+    # top_rated = Project.objects.order_by('-rating')[:5]
+    top_featured = Project.objects.filter(is_featured=True).order_by('-start_time')[:5]
+    top_latest = Project.objects.order_by('-start_time')[:5]
+
+    context = {
+        'top_latest': top_latest,
+        # 'top_rated': top_rated,
+        'top_featured': top_featured,
+    }
+    print(context['top_featured'])
+    print(context['top_featured'][0].category)
+    print(context['top_featured'][1].category)
+    return render(request, 'projects/home.html', context)
 
 
 class AddProject(CreateView):
@@ -65,6 +78,12 @@ class ProjectDetails(DetailView):
         return context
 
 
+class ProjectCancel(DeleteView):
+    model = Project
+    template_name = 'projects/project_cancel.html'
+    success_url = reverse_lazy('projects:home')
+
+
 class MakeDonation(CreateView):
     model = Donation
     form_class = MakeDonationForm
@@ -72,14 +91,19 @@ class MakeDonation(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        project_pk = self.kwargs['pk']
-        context["project_pk"] = project_pk
+        project = Project.objects.get(pk=self.kwargs['pk'])
+        context["project"] = project
         return context
 
     def form_valid(self, form):
         obj = form.save(commit=False)
         obj.user = self.request.user
-        obj.project = Project.objects.get(pk=self.kwargs['pk'])
+        project = Project.objects.get(pk=self.kwargs['pk'])
+        new_current = project.current + obj.amount
+        if new_current > project.total_target:
+            messages.error(self.request, 'the amount donated would exceed the fund target. Please recalculate.')
+            return redirect('projects:make_donation', self.kwargs['pk'])
+        obj.project = project
         obj.save()
         return redirect('projects:project_details', self.kwargs['pk'])
 
@@ -89,7 +113,6 @@ class LeaveComment(CreateView):
     template_name = 'projects/project_comment.html'
     fields = ['comment']
 
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         project_pk = self.kwargs['pk']
@@ -102,12 +125,6 @@ class LeaveComment(CreateView):
         obj.project = Project.objects.get(pk=self.kwargs['pk'])
         obj.save()
         return redirect('projects:project_details', self.kwargs['pk'])
-    
-# You will allow users to report projects and comments made by other users, 
-# and you will then let moderators choose to block a user completely and/or hide their projects or comments.
-# To get started with this, create a moderator group in the admin dashboard. 
-# The moderator group will be given access to change both projects and users and the ability to view reports.
-
 
 
 class ReportProject(CreateView): 
@@ -127,7 +144,8 @@ class ReportProject(CreateView):
         obj.project = Project.objects.get(pk=self.kwargs['pk'])
         obj.save()
         return redirect('projects:project_details', self.kwargs['pk'])
- 
+
+
 class ReportComment(CreateView): 
     model = ReportComment
     template_name = 'projects/comment_report_form.html'
@@ -145,67 +163,14 @@ class ReportComment(CreateView):
         obj.comment = Comment.objects.get(pk=self.kwargs['pk'])
         obj.save()
         return redirect('projects:home')
-    
+
+
+# @permission_required('projects.view_report', raise_exception=True)
 # def reports(request):
-#     url_report = request.get_full_path()
-#     if request.method == 'POST':
-#         form = MakeReportForm(request.POST or None)
-#         if form.is_valid():
-#             new_form = form.save(commit=False)
-#             new_form.reporting_url = url_report
-#             new_form.save()    
+#     projects_reports = Project.objects.annotate(times_reported=Count('report')).filter(times_reported__gt=0).all()
 
-@permission_required('projects.view_report', raise_exception=True)
-def reports(request):
-    projects_reports = Project.objects.annotate(times_reported=Count('report')).filter(times_reported__gt=0).all()
-    # comments_reports = Comment.objects.annotate(times_reported=Count('report')).filter(times_reported__gt=0).all()
-    context = {
-               'projects_reports' : projects_reports,
-            #    'comments_reports' : comments_reports
-               }
-    return render(request, 'projects/reports.html', context)
+#     context = {
+#                'projects_reports' : projects_reports,
+#                }
+#     return render(request, 'projects/reports.html', context)
 
-
-# def report_project(request, project_id):
-#     project = Project.objects.get(id=project_id)
-#     # report, created = Report.objects.get_or_create(reported_by=request.user, project=project)
-#     if request.method == 'POST':
-#         form = MakeReportForm(request.POST or None)
-#         if form.is_valid():
-#             new_form = form.save(commit=False)
-#             new_form.project = request.user
-#             new_form.save()  
-#             return redirect('projects:project_details', id=project_id)  
-#     else:
-#         form = MakeReportForm()
-#     # if created:
-#     #     report.save()
-#     return render(request, 'projects/project_report_form.html', {'form' : form})
-    
-
-# def report_comment(request, comment_id):
-#     comment = Comment.objects.get(id=comment_id)
-#     report, created = Report.objects.get_or_create(reported_by=request.user, comment=comment)
-#     if created:
-#         report.save()
-#     return redirect('projects:project_details', id=comment_id)
-
-
-
-
-# @permission_required('feedapp.change_user')
-# def block_user(request, user_id):
-#     User = get_user_model()
-
-#     user = User.objects.get(id=user_id)
-#     for post in user.post_set.all():
-#         if not post.hidden:
-#             post.hidden = True
-#             post.hidden_by = request.user
-#             post.date_hidden = datetime.now()
-#             post.save()
-
-#     user.is_active = False
-#     user.save()
-
-#     return redirect('reports')
