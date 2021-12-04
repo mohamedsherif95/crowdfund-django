@@ -46,8 +46,11 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'projects',
     'taggit',
+    'projectapi',
+    
 
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
