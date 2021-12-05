@@ -19,6 +19,8 @@ urlpatterns = [
     path('profile/<int:pk>/', views.ProfileView.as_view(), name='profile'),
     path('profile/<int:pk>/update', views.ProfileUpdateView.as_view(), name='profile_update'),
     path('profile/<int:pk>/delete', views.ProfileDeleteView.as_view(), name='profile_delete'),
+    path('profile/<int:pk>/projects', views.UserProjects.as_view(), name='user_projects'),
+    path('profile/<int:pk>/donations', views.UserDonations.as_view(), name='user_donations'),
     
     
     #APIs
