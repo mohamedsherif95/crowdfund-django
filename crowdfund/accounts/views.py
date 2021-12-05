@@ -18,6 +18,7 @@ from django.views import View
 from django.views.generic import DetailView, UpdateView, DeleteView
 
 
+
 def landing(request):
     return redirect('accounts:login')
 
@@ -141,3 +142,6 @@ def password_reset_request(request):
                     return redirect ("password_reset_done")
     password_reset_form = PasswordResetForm()
     return render(request=request, template_name="accounts/password/password_reset.html", context={"form":password_reset_form})
+
+
+    

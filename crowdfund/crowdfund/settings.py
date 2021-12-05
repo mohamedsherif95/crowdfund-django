@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'projects',
     'taggit',
+    'knox',
 
 ]
 
@@ -151,3 +152,12 @@ LOGIN_REDIRECT_URL = 'projects:home'
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        # 'rest_framework.authentication.BasicAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
+        'knox.auth.TokenAuthentication',
+    ]
+}

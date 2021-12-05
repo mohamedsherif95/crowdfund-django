@@ -1,5 +1,6 @@
 from django.urls import path
-from . import views
+from . import views , api
+from knox import views as knox_views
 from django.views.generic.base import TemplateView
 
 
@@ -18,5 +19,15 @@ urlpatterns = [
     path('profile/<int:pk>/', views.ProfileView.as_view(), name='profile'),
     path('profile/<int:pk>/update', views.ProfileUpdateView.as_view(), name='profile_update'),
     path('profile/<int:pk>/delete', views.ProfileDeleteView.as_view(), name='profile_delete'),
+    
+    
+    #APIs
+    
+    path('api/register/', api.RegisterAPI.as_view(), name='registerapi'),
+    path('api/login/', api.LoginAPI.as_view(), name='loginapi'),
+    path('api/logout/', knox_views.LogoutView.as_view(), name='logoutapi'),
+    path('api/user/', api.UserAPI.as_view()),
+    # path('api/logoutall/', knox_views.LogoutAllView.as_view(), name='logoutallapi'),
+
 ]
 
