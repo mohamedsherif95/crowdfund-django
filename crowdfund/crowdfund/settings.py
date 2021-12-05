@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'social_django',
     'rest_framework',
     'accounts',
     'phonenumber_field',
@@ -62,6 +63,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     # 'querycount.middleware.QueryCountMiddleware',
+    
+    'social_django.middleware.SocialAuthExceptionMiddleware',
 ]
 
 ROOT_URLCONF = 'crowdfund.urls'
@@ -77,10 +80,21 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                
+                'social_django.context_processors.backends', 
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
 ]
+
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.facebook.FacebookOAuth2',
+    'social_core.backends.twitter.TwitterOAuth',
+    'social_core.backends.github.GithubOAuth2',
+
+    'django.contrib.auth.backends.ModelBackend',
+)
 
 WSGI_APPLICATION = 'crowdfund.wsgi.application'
 
@@ -147,8 +161,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'accounts.User'
 
+LOGIN_URL = 'accounts:login'
+LOGOUT_URL = 'accounts:logout'
 LOGIN_REDIRECT_URL = 'projects:home'
 
+SOCIAL_AUTH_FACEBOOK_KEY = '368824831666687'  # App ID
+SOCIAL_AUTH_FACEBOOK_SECRET = 'e973ff03c033c1f4c925332f69cbda15'  # App Secret
 
 # env = environ.Env()
 # environ.Env.read_env()
