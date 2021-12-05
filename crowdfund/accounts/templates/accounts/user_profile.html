@@ -76,7 +76,7 @@
                 alt="{{ project.title }}"
               />
             <div class="card-body">
-              <h5 class="card-title">{{ project.title }}</h5>
+              <h5 class="card-title">{{ project.title }} | {{ project.category }}</h5>
             </a>
               <div>
                 {% for tag in project.tags.all %}
