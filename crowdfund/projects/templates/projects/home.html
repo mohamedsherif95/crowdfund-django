@@ -17,7 +17,7 @@
           {% for project in top_rated %}
           <div class="carousel-item  {% if forloop.counter0 == 0 %}active{% endif %}">
             <a class="d-flex justify-content-center " href="{% url 'projects:project_details' project.pk %}">
-            <img src="{{project.images.url}}" class="testi-overly d-block w-50 mh-50" alt="sliderImg"></a>
+            <img src="{{project.images.url}}" class="testi-overly d-block w-50" alt="sliderImg"></a>
               <div class="carousel-caption d-none d-md-block">
                   <h1 class="fw-light">{{project.title}}</h1>
                   <h5 class="fw-light">{{project.category}} | <span>{{ project.avg_rate }}/5</span></h5>
@@ -42,7 +42,7 @@
           {% for project in top_latest %}
           <div class="carousel-item  {% if forloop.counter0 == 0 %}active{% endif %}">
             <a class="d-flex justify-content-center " href="{% url 'projects:project_details' project.pk %}">
-            <img src="{{project.images.url}}" class="testi-overly d-block w-50 mh-50" alt="sliderImg"></a>
+            <img src="{{project.images.url}}" class="testi-overly d-block w-50" alt="sliderImg"></a>
               <div class="carousel-caption d-none d-md-block">
                 <h1 class="fw-light">{{project.title}}</h1>
                 <h5 class="fw-light">{{project.category}} | <span>{{ project.avg_rate }}/5</span></h5>
@@ -67,7 +67,7 @@
           {% for project in top_featured %}
           <div class="carousel-item  {% if forloop.counter0 == 0 %}active{% endif %}">
             <a class="d-flex justify-content-center " href="{% url 'projects:project_details' project.pk %}">
-            <img src="{{project.images.url}}" class="testi-overly d-block w-50 mh-50" alt="sliderImg"></a>
+            <img src="{{project.images.url}}" class="testi-overly d-block w-50" alt="sliderImg"></a>
               <div class="carousel-caption d-none d-md-block">
                 <h1 class="fw-light">{{project.title}}</h1>
                 <h5 class="fw-light">{{project.category}} | <span>{{ project.avg_rate }}/5</span></h5>
