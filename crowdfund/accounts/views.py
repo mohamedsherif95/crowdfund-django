@@ -1,4 +1,5 @@
 from django.urls import reverse, reverse_lazy
+from projects.models import Project, Donation
 from .utils import token_generator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_text
@@ -15,7 +16,7 @@ from django.core.mail import send_mail, BadHeaderError
 from .models import User
 from .forms import UserForm, LoginForm
 from django.views import View
-from django.views.generic import DetailView, UpdateView, DeleteView
+from django.views.generic import DetailView, UpdateView, DeleteView, ListView
 
 
 
@@ -99,6 +100,12 @@ class ProfileView(DetailView):
     model = User
     template_name = 'accounts/user_profile.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user_projects = Project.objects.filter(user=context['user']).order_by('-start_time')[:2]
+        context['user_projects'] = user_projects
+        return context
+
 
 class ProfileUpdateView(UpdateView):
     model = User
@@ -144,4 +151,19 @@ def password_reset_request(request):
     return render(request=request, template_name="accounts/password/password_reset.html", context={"form":password_reset_form})
 
 
-    
+class UserProjects(ListView):
+    model = Project
+    template_name = 'projects/project_list.html'
+    def get_queryset(self):
+        user = User.objects.get(id=self.kwargs['pk'])
+        queryset = self.model.objects.filter(user=user)
+        return queryset
+
+
+class UserDonations(ListView):
+    model = Donation
+    template_name = 'accounts/user_donations.html'
+    def get_queryset(self):
+        user = User.objects.get(id=self.kwargs['pk'])
+        queryset = self.model.objects.filter(user=user).order_by('-created')
+        return queryset
