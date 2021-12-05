@@ -156,7 +156,7 @@ class MakeDonation(CreateView):
 class LeaveComment(CreateView):
     model = Comment
     template_name = 'projects/project_comment.html'
-    fields = ['comment','rate']
+    fields = ['comment']
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
