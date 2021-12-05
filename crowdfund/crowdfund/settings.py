@@ -47,8 +47,11 @@ INSTALLED_APPS = [
     'projects',
     'taggit',
     'knox',
+    'projectapi',
+    
 
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
