@@ -1,9 +1,10 @@
+from django.contrib.auth.hashers import check_password
 from django.urls import reverse, reverse_lazy
 from projects.models import Project, Donation
 from .utils import token_generator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_text
-from django.contrib import auth
+from django.contrib import auth, messages
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth.tokens import default_token_generator
@@ -121,6 +122,32 @@ class ProfileDeleteView(DeleteView):
     template_name = 'accounts/profile_delete.html'
     success_url = reverse_lazy('accounts:login')
 
+    def post(self, request, *args, **kwargs):
+        form_password = request.POST.get('password')
+        user_password = request.user.password
+        if check_password(form_password, user_password):
+            return self.delete(request, *args, **kwargs)
+        messages.error(self.request, 'Incorrect password!')
+        return redirect('accounts:profile_delete', self.kwargs['pk'])
+
+
+class UserProjects(ListView):
+    model = Project
+    template_name = 'projects/project_list.html'
+    def get_queryset(self):
+        user = User.objects.get(id=self.kwargs['pk'])
+        queryset = self.model.objects.filter(user=user)
+        return queryset
+
+
+class UserDonations(ListView):
+    model = Donation
+    template_name = 'accounts/user_donations.html'
+    def get_queryset(self):
+        user = User.objects.get(id=self.kwargs['pk'])
+        queryset = self.model.objects.filter(user=user).order_by('-created')
+        return queryset
+
 
 def password_reset_request(request):
     if request.method == "POST":
@@ -149,21 +176,3 @@ def password_reset_request(request):
                     return redirect ("password_reset_done")
     password_reset_form = PasswordResetForm()
     return render(request=request, template_name="accounts/password/password_reset.html", context={"form":password_reset_form})
-
-
-class UserProjects(ListView):
-    model = Project
-    template_name = 'projects/project_list.html'
-    def get_queryset(self):
-        user = User.objects.get(id=self.kwargs['pk'])
-        queryset = self.model.objects.filter(user=user)
-        return queryset
-
-
-class UserDonations(ListView):
-    model = Donation
-    template_name = 'accounts/user_donations.html'
-    def get_queryset(self):
-        user = User.objects.get(id=self.kwargs['pk'])
-        queryset = self.model.objects.filter(user=user).order_by('-created')
-        return queryset

@@ -1,4 +1,5 @@
 from django import forms
+from django.forms.widgets import NumberInput
 from .models import User
 from phonenumber_field.formfields import PhoneNumberField
 from phonenumber_field.widgets import PhoneNumberPrefixWidget
@@ -24,6 +25,8 @@ class ProfileUpdateForm(forms.ModelForm):
 
     phone_number = PhoneNumberField(
     widget=PhoneNumberPrefixWidget(initial='EG'), required=False)
+    birth_date = forms.DateField(label="Birth Date", required=False,
+     widget=NumberInput(attrs={'type':'date'}))
 
     class Meta:
         model = User
