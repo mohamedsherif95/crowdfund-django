@@ -14,9 +14,11 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.shortcuts import render, redirect
 from django.core.mail import send_mail, BadHeaderError
 from .models import User
-from .forms import UserForm, LoginForm
+from .forms import ProfileUpdateForm, UserForm, LoginForm
 from django.views import View
 from django.views.generic import DetailView, UpdateView, DeleteView, ListView
+from phonenumber_field.formfields import PhoneNumberField
+from phonenumber_field.widgets import PhoneNumberPrefixWidget
 
 
 
@@ -109,12 +111,10 @@ class ProfileView(DetailView):
 
 class ProfileUpdateView(UpdateView):
     model = User
+    form_class = ProfileUpdateForm
     template_name = 'accounts/profile_update.html'
-    fields = ('first_name', 'last_name', 'username', 'phone_number', 'profile_picture', 'birth_date', 'country', 'facebook')
-
-    # success_url = reverse_lazy('accounts:profile')
+    # fields = ('first_name', 'last_name', 'username', 'phone_number', 'profile_picture', 'birth_date', 'country', 'facebook')
     
-
 
 class ProfileDeleteView(DeleteView):
     model = User
