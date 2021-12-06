@@ -63,7 +63,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     # 'querycount.middleware.QueryCountMiddleware',
-    
     'social_django.middleware.SocialAuthExceptionMiddleware',
 ]
 
