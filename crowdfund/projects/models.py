@@ -49,11 +49,11 @@ class Project(models.Model):
 
 
 class Image(models.Model):
-    project = models.ForeignKey(Project, default=None, on_delete=models.CASCADE, blank=True, null=True)
+    project = models.ForeignKey(Project, default=None,related_name='extra_images', on_delete=models.CASCADE, blank=True, null=True)
     image = models.ImageField( blank=True, null=True)
 
     def __str__(self):
-        return f"id: {self.id}, Project: {self.project}"
+        return f"id: {self.id}, Project: {self.project}, Image: {self.image.url}"
 
 
 class Donation(models.Model):
