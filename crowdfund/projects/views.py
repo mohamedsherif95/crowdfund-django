@@ -3,7 +3,7 @@ from django.db import models
 from django.http.response import HttpResponse
 from django.views.generic import CreateView, ListView, DetailView, DeleteView
 from django.urls import reverse_lazy
-from .models import Comment, Donation, Project, Image, ReportProject, ReportComment, Rating
+from .models import Comment, Donation, Project, Image, Reply, Reply, ReportProject, ReportComment, Rating
 from .forms import AddProjectForm, MakeDonationForm
 from django.shortcuts import redirect, render
 from django.db.models import Q, Count, fields
@@ -187,6 +187,31 @@ class LeaveComment(CreateView):
         obj.project = Project.objects.get(pk=self.kwargs['pk'])
         obj.save()
         return redirect('projects:project_details', self.kwargs['pk'])
+
+
+
+class LeaveReply(CreateView):
+    model = Reply
+    template_name = 'projects/project_reply.html'
+    fields = ['reply']
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        comment_pk = self.kwargs['pk']
+        project_pk = self.kwargs['project_pk']
+        context["comment_pk"] = comment_pk
+        
+        context["project_pk"] = project_pk
+        return context
+
+    def form_valid(self, form):
+        obj = form.save(commit=False)
+        obj.user = self.request.user
+        obj.comment = Comment.objects.get(pk=self.kwargs['pk'])
+        obj.save()
+        return redirect('projects:project_details', self.kwargs['project_pk'])
+
+
 
 
 class ReportProject(CreateView): 
