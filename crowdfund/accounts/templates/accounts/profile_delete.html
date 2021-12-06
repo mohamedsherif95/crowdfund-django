@@ -8,20 +8,27 @@
 
 <!-- page content -->
 {% block content %}
-<div class="row">
-  <div class="col-2"></div>
-    <div class="col-8">
+<div class="container d-flex justify-content-center">
+    <div class="col-5">
       <div class="card mt-5 shadow">
         <div class="card-body">
           <div class="card-title py-3">
             {% if request.user.pk == user.pk %}
-                <h2>Account deletion confirmation</h2>
+                <h3>Account deletion confirmation</h3>
+                {% if messages %}
+                  <div class="mt-2">
+                      {% for message in messages %}
+                      <h5 class="alert alert-danger">{{ message }}</h5>
+                      {% endfor %}
+                  </div>
+                {% endif %}
                 </div>
-                    <form action="{% url 'accounts:profile_delete' user.pk %}" method="post" novalidate>
+                    <form class="text-center" action="{% url 'accounts:profile_delete' user.pk %}" method="post" novalidate>
                     {% csrf_token %}
-                    <p class="alert alert-danger" role="alert">
-                        Are you sure you want to delete your account?
-                    </p>
+                    <h4>Enter Your password</h4>
+                    <div class="my-2 form-group">
+                      <input class="form-control" name="password" type="password" id="formpassword">
+                    </div>
                     <input class=" btn btn-danger m-4 col-2 p-2" type="submit" value="Confirm">
                     </form>
                 </div>
@@ -31,6 +38,5 @@
         </div>
       </div>
     </div>
-  <div class="col-2"></div>
 </div>
 {% endblock content %}

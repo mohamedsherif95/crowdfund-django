@@ -17,7 +17,7 @@
             {% if request.user.pk == user.pk %}
                 <h2>Edit your personal information</h2>
                 </div>
-                    <form action="{% url 'accounts:profile_update' user.pk %}" method="post" novalidate>
+                    <form action="{% url 'accounts:profile_update' user.pk %}" method="post" enctype='multipart/form-data' novalidate>
                     {% csrf_token %}
                     {% include 'includes/form.html' %}
                     <div class="text-center col-12">

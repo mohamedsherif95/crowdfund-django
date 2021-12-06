@@ -69,6 +69,23 @@ class ProjectSearch(ListView):
         return queryset
 
 
+class CategoryProjects(ListView):
+    model = Project
+
+    def get_queryset(self):
+        category = self.kwargs['category']
+
+        if category == 'sc':
+            queryset = self.model.objects.filter(category='Social')
+        elif category == 'ed':
+            queryset = self.model.objects.filter(category='Educational')
+        elif category == 'po':
+            queryset = self.model.objects.filter(category='Political')
+        elif category == 'sp':
+            queryset = self.model.objects.filter(category='Sports')
+        return queryset
+
+
 class ProjectDetails(DetailView):
 
     model = Project

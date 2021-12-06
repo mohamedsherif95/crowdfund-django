@@ -1,8 +1,38 @@
 {% extends 'base.html' %}
 
+<!-- <script>
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '{your-app-id}',
+      cookie     : true,
+      xfbml      : true,
+      version    : '{api-version}'
+    });
+      
+    FB.AppEvents.logPageView();   
+      
+  };
+
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "https://connect.facebook.net/en_US/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+
+   FB.getLoginStatus(function(response) {
+    statusChangeCallback(response);
+});
+</script> -->
+
 {% block title %} Log in {% endblock %}
 
 {% block content %}
+ <!-- Bootstrap core JavaScript-->
+ <script src="vendor/jquery/jquery.min.js"></script>
+ <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
 <div class="container">
   <br><br><div class="row">
     <div class="col-md-6 p-5 mt-5">
@@ -20,13 +50,24 @@
                 {% include 'includes/form.html' %}
                 <div class="text-center col-12">
                 <input class=" btn btn-primary my-2 col-11 p-2" type="submit" value="Log in">
+                <!-- <p><strong>-- OR --</strong></p>
+                  <a href="{% url 'social:begin' 'facebook' %}" class="btn btn-facebook btn-user btn-block">
+                    <i class="fab fa-facebook-f fa-fw"></i> Login with Facebook</a> -->
                 </div>
+                  <!-- <div id="fb-root"></div> -->
+                  <!-- <script async defer crossorigin="anonymous" 
+                  src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v12.0&appId=368824831666687&autoLogAppEvents=1" 
+                  nonce="9SuCltIM"></script> -->
+                  <div class="d-flex justify-content-center">
+                    <a href="{% url 'social:begin' 'facebook' %}" class="btn btn-primary">Login with Facebook</a>
+                  </div>
                 <div class="text-center">
                 <p>Forgotten password? <a href="{% url 'accounts:password_reset' %}">Reset</a></p>
                 </div>
                 <div class=" my-3 text-center">
                 <a class="btn btn-success p-2" href="{% url 'accounts:register' %}">Create an account</a>
                 </div>
+                
               </form>
             </div>
           </div>

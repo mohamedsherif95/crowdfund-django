@@ -46,28 +46,32 @@
       <div class="bg-dark px-4 py-2 d-flex justify-content-end text-center">
         <ul class="list-inline mb-0">
           <li class="list-inline-item">
-            <h5 class="text-light font-weight-bold mb-0 d-block">
-              {{ user.project_set.count }}
-            </h5>
-            <small class="text-muted">Projects</small
-            >
+            <a class="text-decoration-none" href="{% url 'accounts:user_projects' user.pk %}">
+              <h5 class="text-light font-weight-bold mb-0 d-block">
+                {{ user.project_set.count }}
+              </h5>
+              <small class="text-muted">Projects</small
+              >
+            </a>
           </li>
           <li class="list-inline-item">
-            <h5 class="text-light font-weight-bold mb-0 d-block">
-              {{ user.donation_set.count }}
-            </h5>
-            <small class="text-muted">Donations</small
-            >
+            <a class="text-decoration-none" href="{% url 'accounts:user_donations' user.pk %}">
+              <h5 class="text-light font-weight-bold mb-0 d-block">
+                {{ user.donation_set.count }}
+              </h5>
+              <small class="text-muted">Donations</small
+              >
+            </a>
           </li>
         </ul>
       </div>
 
       <div class="py-4 px-4">
         <div class="d-flex align-items-center justify-content-between mb-3">
-          <h5 class="mb-0">{{ user.first_name }}'s projects</h5>
+          <h5 class="mb-0">{{ user.first_name }}'s latest projects</h5>
         </div>
         <div class="row d-flex justify-content-center">
-          {% for project in user.project_set.all %}
+          {% for project in user_projects %}
           <div class="card col-4 mx-3 p-2 shadow">
             <a id="project-title" href="{% url 'projects:project_details' project.pk %}">
               <img
@@ -76,7 +80,7 @@
                 alt="{{ project.title }}"
               />
             <div class="card-body">
-              <h5 class="card-title">{{ project.title }}</h5>
+              <h5 class="card-title">{{ project.title }} | {{ project.category }}</h5>
             </a>
               <div>
                 {% for tag in project.tags.all %}
