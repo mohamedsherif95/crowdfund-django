@@ -166,19 +166,17 @@
                     <div class="list-group-item" >
                         <div class="d-flex w-100 justify-content-between">
                             <a href="{% url 'accounts:profile' reply.user.pk %}"><h5 class="mb-1">{{ reply.user.username }}</h5></a>
+                            {% comment %} {% if request.user != reply.user %}
                             <div class="dropdown">
                                 <a class="link-dark text-decoration-none fw-bolder m-1" href="" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">. . .</a>
                                 <ul class="dropdown-menu rounded-3 shadow-lg" aria-labelledby="dropdownMenuButton1">
-                                    {% if request.user != comment.user %}
                                       <li><a class="dropdown-item" href="{% url 'projects:report_comment' reply.pk %}">report</a></li>
-                                    {% endif %}
                                 </ul>
                             </div>
+                            {% endif %} {% endcomment %}
+                            <small class="text-muted mb-1">{{ reply.created }}</small>
                         </div>
-                        <small class="text-muted mb-1">{{ reply.created }}</small>
                         <p class="mb-1">{{reply.reply }}</p>
-                      
-                       
                     </div>
                     {% endfor %}
                 </div>
