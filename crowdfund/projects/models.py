@@ -94,7 +94,14 @@ class Comment(models.Model):
     def __str__(self):
         return f"user: {self.user.username}, project: {self.project.title}"
 
-    
+class Reply(models.Model):
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    reply = models.TextField()
+    created = models.DateTimeField(auto_now_add=True)
+    def __str__(self):
+        return f"user: {self.user.username}"
+        
 class ReportProject(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
